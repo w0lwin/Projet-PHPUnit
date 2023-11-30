@@ -46,6 +46,38 @@ class RecetteDAO{
 
     }
 
+    public function getRecetteByTitle($nom_recette){
+
+        if ($nom_recette == null){
+            throw new InvalidArgumentException('nom_recette should not be null');
+        }
+
+        if (!is_string($nom_recette)){
+            throw new InvalidArgumentException('nom_recette should be a string');
+        }
+
+        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette = :nom_recette");
+        $stmt->execute(['nom_recette' => $nom_recette]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+        $ingredients = $this->getIngredientsRecette($result['id']);
+        foreach ($ingredients as $ingredient) {
+            $ingredients[] = $ingredient['id'];
+        }
+
+        $recette = new Recette($result['id'],
+        $result['nom_recette'],
+        $result['instruction'],
+        $result['temps_preparation'],
+        $result['temps_cuisson'],
+        $result['difficulte'],
+        $result['categories_id'],
+        $ingredients);
+
+        return $recette;
+
+    }
     public function getRecettes(){
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");
         $stmt->execute();
@@ -95,7 +127,7 @@ class RecetteDAO{
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $ingredients = [];
         foreach ($result as $row) {
-            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['Quantite']];
+            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['Quantite'], 'recette_id'=> $row['recette_id']];
             array_push($ingredients, $ingredient);
         }
         return $ingredients;

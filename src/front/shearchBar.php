@@ -4,9 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page principal</title>
+    <title>shearchBar</title>
 </head>
 <body>
-    <p>Coucou</p>
+    <p>Rechercher un film</p>
+    <form action="front/shearchBar.php" method="post">
+        <input type="text" name="shearchBar" id="shearchBar">
+        <input type="submit" value="Rechercher">
+    </form>
 </body>
 </html>
+    <?php
+        require_once '../recette/RecetteDAO.php';
+        $recetteDAO = new RecetteDAO();
+        $recetteDAO->getRecetteByTitle($_POST['shearchBar']);
+    ?>
