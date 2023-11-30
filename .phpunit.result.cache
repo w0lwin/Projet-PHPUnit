@@ -1,0 +1,1 @@
+{"version":1,"defects":{"testCategorie::testAjouterCategorie":4,"testCategorie::testGetCategorieAll":3,"testCategorie::testGetCategorieById":3,"testCategorie::testUpdateCategorie":4},"times":{"testCategorie::testAjouterCategorie":0.185,"testCategorie::testGetCategorieAll":0.058,"testCategorie::testGetCategorieById":0.053,"testCategorie::testUpdateCategorie":0.08}}

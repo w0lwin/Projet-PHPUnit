@@ -1,6 +1,6 @@
 <?php
 
-require_once(Categorie.php);
+require_once("Categorie.php");
 
 class CategorieDAO{
     private $db;
@@ -26,27 +26,33 @@ class CategorieDAO{
         $categories = [];
 
         $stmt->execute();
-        $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($stmt as $row){
-            $categorie = new Categorie($row['categorie_id'], $row['nom_categorie']);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($row as $e){
+            $categorie = new Categorie($e['categorie_id'], $e['nom_categorie']);
             $categories[] = $categorie;
         }
         return $categories;
     }
 
-    public function getCategorieById($categorieId) {
+    public function getCategorieById($categorie_Id) {
         $query = "SELECT * FROM categories WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
-
+        $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
+    
         $stmt->execute();
-        $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return new Categorie($row['categorie_id'], $row['nom_categorie']);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return new Categorie($row['categorie_id'], $row['nom_categorie']);
+        } else {
+            return null;
+        }
     }
+    
 
     // UPDATE
-    public function modifierCategorie(Categorie $categorie) {
+    public function updateCategorie(Categorie $categorie) {
         $categorieId = $categorie->getCategorieId();
         $nouveauNom = $categorie->getNomCategorie();
 
@@ -58,7 +64,7 @@ class CategorieDAO{
     }
 
     // DELETE
-    public function supprimerCategorie($categorieId) {
+    public function deleteCategorie($categorieId) {
         $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
