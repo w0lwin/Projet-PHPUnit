@@ -3,12 +3,11 @@
     bootstrap="vendor/autoload.php">
     <php>
     <env name="DB_CONNECTION" value="mysql" />
-    <env name="DB_HOST" value="127.0.0.1" />
+    <env name="DB_HOST" value="91.134.89.49" />
     <env name="DB_PORT" value="8090" />
     <env name="DB_DATABASE" value="appCuisine" />
     <env name="DB_USERNAME" value="appCuisine" />
-    <env name="DB_PASSWORD" value="betre9-haqRax-zotmag
-" />
+    <env name="DB_PASSWORD" value="betre9-haqRax-zotmag" />
     </php>
     <testsuites>
         <testsuite name="Unit Tests">
