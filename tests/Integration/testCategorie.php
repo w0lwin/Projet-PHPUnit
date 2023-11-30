@@ -48,21 +48,23 @@ class testCategorie extends TestCase{
 
     // }
 
-    // public function testGetCategorieById(){
-    //     $categories = $this->categorie->getCategorieById(1);
 
-    //     $this->assertInstanceOf(Categorie::class, $categories);
-    //     $this->assertEquals(1, $categories->getCategorieId());
-    // }
     
     // public function testGetCategorieAll(){
     //     $categories = $this->categorie->getAllCategories();
     //     var_dump($categories);
     //     $this->assertNotEmpty($categories);
 
-    //     foreach ($categories as $categorie) {
-    //         $this->assertInstanceOf(Categorie::class, $categorie);
+    //     foreach ($categories as $cat) {
+    //         $this->assertInstanceOf(Categorie::class, $cat);
     //     } 
+    // }
+
+    // public function testGetCategorieById(){
+    //     $categories = $this->categorie->getCategorieById(1);
+
+    //     $this->assertInstanceOf(Categorie::class, $categories);
+    //     $this->assertEquals(1, $categories->getCategorieId());
     // }
     
     // public function testUpdateCategorie(){
