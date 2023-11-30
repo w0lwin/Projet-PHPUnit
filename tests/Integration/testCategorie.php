@@ -74,17 +74,21 @@ class testCategorie extends TestCase{
     //     }
     // } 
 
-
     public function testRemoveCategorie(){
-        $id = 5;
-        $remove = $this->categorie->deleteCategorie($id);
+        $id = 4;
+        $categories = $this->categorie->getCategorieById($id);
+        $this->assertInstanceOf(Categorie::class, $categories);
     
-        $this->assertTrue($remove);
+        if($categories instanceOf Categorie){
+            $remove = $this->categorie->deleteCategorie($id); 
+            
+            $this->assertTrue($remove);
+            $categorieDelete = $this->categorie->getCategorieById($id);
     
-        $categorieDelete = $this->categorie->getCategorieById($id);
-    
-        $this->assertNull($categorieDelete);
+            $this->assertNull($categorieDelete);
+        }
     }
+    
     
 
 }
