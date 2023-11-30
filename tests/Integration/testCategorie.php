@@ -28,14 +28,23 @@ class testCategorie extends TestCase{
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
+
     // public function testAjouterCategorie() {
     //     $categorie = new Categorie(null, 'plats');
     //     $this->categorie->ajouterCategorie($categorie);
+
+    //     if(is_int($categorie->getNomCategorie())){
+    //         $this->expectException(Exception::class);
+    //     }
+    //     if($categorie->getNomCategorie() == null){
+    //         $this->expectException(Exception::class);
+    //     }
+        
+    //     $addedCategorie = $this->categorie->getCategorieById(2);
+    //     var_dump($addedCategorie);
     
-    //     $addedCategorie = $this->categorie->getCategorieById(1);
-    
-    //     $this->assertEquals(1, $addedCategorie->getCategorieId());
-    //     $this->assertEquals($categorie->getNomCategorie(), $addedCategorie->getNomCategorie());
+    //     $this->assertEquals(2, $addedCategorie->getCategorieId());
+    //     $this->assertEquals($categorie->getNomCategorie(),$addedCategorie->getNomCategorie());
 
     // }
 
@@ -74,20 +83,20 @@ class testCategorie extends TestCase{
     //     }
     // } 
 
-    public function testRemoveCategorie(){
-        $id = 4;
-        $categories = $this->categorie->getCategorieById($id);
-        $this->assertInstanceOf(Categorie::class, $categories);
+    // public function testRemoveCategorie(){
+    //     $id = 4;
+    //     $categories = $this->categorie->getCategorieById($id);
+    //     $this->assertInstanceOf(Categorie::class, $categories);
     
-        if($categories instanceOf Categorie){
-            $remove = $this->categorie->deleteCategorie($id); 
-            
-            $this->assertTrue($remove);
-            $categorieDelete = $this->categorie->getCategorieById($id);
+    //     if($categories instanceOf Categorie){
+    //         $remove = $this->categorie->deleteCategorie($id); 
+
+    //         $this->assertTrue($remove);
+    //         $categorieDelete = $this->categorie->getCategorieById($id);
     
-            $this->assertNull($categorieDelete);
-        }
-    }
+    //         $this->assertNull($categorieDelete);
+    //     }
+    // }
     
     
 

@@ -12,6 +12,13 @@ class CategorieDAO{
     // CREATE
     public function ajouterCategorie(Categorie $categorie) {
         $nomCategorie = $categorie->getNomCategorie();
+
+        if(is_int($nomCategorie)){
+            throw new Exception('string obligatoire');
+        }
+        if($nomCategorie == null){
+            throw new Exception('champs vide');
+        }
     
         $query = "INSERT INTO categories (nom_categorie) VALUES (:nomCategorie)";
         $stmt = $this->db->prepare($query);
@@ -42,7 +49,7 @@ class CategorieDAO{
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        var_dump($row);
         if ($row) {
             return new Categorie($row['categorie_id'], $row['nom_categorie']);
         } else {
