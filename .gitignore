@@ -2,3 +2,4 @@
 /composer.json
 /composer.lock
 /phpunit.xml
+/phpunit.resutl.cache
