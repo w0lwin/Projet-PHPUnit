@@ -23,7 +23,13 @@ class RecetteDAO{
         $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $recette = new Recette($result['id'], $result['nom_recette'], $result['instruction'], $result['temps_preparation'], $result['temps_cuisson'], $result['difficulte'], $result['categorie_id'], $result['ingredients']);
+
+        $ingredients = $this->getIngredientsRecette($id);
+        foreach ($ingredients as $ingredient) {
+            $ingredients[] = $ingredient['id'];
+        }
+
+        $recette = new Recette($result['id'], $result['nom_recette'], $result['instruction'], $result['temps_preparation'], $result['temps_cuisson'], $result['difficulte'], $result['categorie_id'], $ingredients);
         return $recette;
     }
 
@@ -51,14 +57,14 @@ class RecetteDAO{
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $ingredients = [];
         foreach ($result as $row) {
-            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['quantite']];
+            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['Quantite']];
             array_push($ingredients, $ingredient);
         }
         return $ingredients;
     }
     
 
-    public function addRecette(Recette $recette)
+    public function addRecette(Recette $recette,$quantite)
     {   
         $nom_recette = $recette->getNomRecette();
         $instruction = $recette->getInstruction();
@@ -66,39 +72,69 @@ class RecetteDAO{
         $temps_cuisson = $recette->getTempsCuisson();
         $difficulte = $recette->getDifficulte();
         $categorie_id = $recette->getCategorieId();
+        $ingredients = $recette->getIngredients();
         
-        
-        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null){
+        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
             throw new InvalidArgumentException('nom_recette should not be null');
         }
-
+    
         if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
-            throw new InvalidArgumentException('temps_preparation, temps_cuisson and difficulte should be integers');
+            throw new InvalidArgumentException('temps_preparation, temps_cuisson, and difficulte should be integers');
         }
         
-        foreach ($this->getRecettes() as $recette) {
-            if ($recette->getNomRecette() == $nom_recette) {
+        foreach ($this->getRecettes() as $existingRecette) {
+            if ($existingRecette->getNomRecette() == $nom_recette) {
                 throw new InvalidArgumentException('nom_recette should be unique');
             }
         }
-
-        $stmt = $this->pdo->prepare("INSERT INTO recettes (nom_recette, instruction, temps_preparation, temps_cuisson, difficulte, categories_id) VALUES (:nom_recette, :instruction, :temps_preparation, :temps_cuisson, :difficulte, :categorie_id)");
-        $stmt->execute(['nom_recette' => $nom_recette, 'instruction' => $instruction, 'temps_preparation' => $temps_preparation, 'temps_cuisson' => $temps_cuisson, 'difficulte' => $difficulte, 'categorie_id' => $categorie_id]);
     
-        //recupère l'id de la dernière recette ajouté
-        $recette_id = $this->pdo->lastInsertId();
-        $ingredients = $recette->getIngredients();
-
+        $stmt = $this->pdo->prepare("INSERT INTO recettes (nom_recette, instruction, temps_preparation, temps_cuisson, difficulte, categories_id) VALUES (:nom_recette, :instruction, :temps_preparation, :temps_cuisson, :difficulte, :categorie_id)");
+        $stmt->bindParam(':nom_recette', $nom_recette);
+        $stmt->bindParam(':instruction', $instruction);
+        $stmt->bindParam(':temps_preparation', $temps_preparation);
+        $stmt->bindParam(':temps_cuisson', $temps_cuisson);
+        $stmt->bindParam(':difficulte', $difficulte);
+        $stmt->bindParam(':categorie_id', $categorie_id);
+        $stmt->execute();
+    
+        // Obtenir l'ID de la recette insérée
+        $recetteId = $this->pdo->lastInsertId();
+    
         foreach ($ingredients as $ingredient) {
-            $stmt2 = $this->pdo->prepare("INSERT INTO recette_ingredients (recette_id, ingredient_id, quantite) VALUES (:recette_id, :ingredient_id, :quantite)");
-            $stmt2->execute(['recette_id' => $recette_id, 'ingredient_id' => $ingredient['id'], 'quantite' => $ingredient['quantite']]);
+            $ingredientId = $ingredient->getIngredientId(); 
+            $index = array_search($ingredientId, array_column($ingredients, 'id'));
+            $ingredientQuantite = $quantite[$index];
+        
+        
+            $stmt2 = $this->pdo->prepare("INSERT INTO recette_ingredients (recette_id, ingredient_id, Quantite) VALUES (:recette_id, :ingredient_id, :quantite)");
+            $stmt2->bindParam(':recette_id', $recetteId);
+            $stmt2->bindParam(':ingredient_id', $ingredientId);
+            $stmt2->bindParam(':quantite', $ingredientQuantite);    
+            $stmt2->execute();
         }
+        
+    }
+    
+
+
+    public function lastInsertId(){
+        $stmt = $this->pdo->prepare("SELECT MAX(id) FROM recettes");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['MAX(id)'];
     }
     
 
     public function updateRecette($id, $nom_recette, $instruction, $temps_preparation, $temps_cuisson, $difficulte, $categorie_id){
         $stmt = $this->pdo->prepare("UPDATE recettes SET nom_recette = :nom_recette, instruction = :instruction, temps_preparation = :temps_preparation, temps_cuisson = :temps_cuisson, difficulte = :difficulte, categorie_id = :categorie_id WHERE id = :id");
-        $stmt->execute(['id' => $id, 'nom_recette' => $nom_recette, 'instruction' => $instruction, 'temps_preparation' => $temps_preparation, 'temps_cuisson' => $temps_cuisson, 'difficulte' => $difficulte, 'categorie_id' => $categorie_id]);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':nom_recette', $nom_recette);
+        $stmt->bindParam(':instruction', $instruction);
+        $stmt->bindParam(':temps_preparation', $temps_preparation);
+        $stmt->bindParam(':temps_cuisson', $temps_cuisson);
+        $stmt->bindParam(':difficulte', $difficulte);
+        $stmt->bindParam(':categorie_id', $categorie_id);
+        $stmt->execute();
     }
 
     public function deleteRecette($id){

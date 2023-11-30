@@ -35,16 +35,16 @@ class RecetteTest extends TestCase
 
     public function testAddRecette( )
     {
-        $nomRecette = 'Rougail saucisse';
+        $nomRecette = 'Soupe de poulet';
         $instruction = 'Faire cuire le poulet dans une poele';
         $tempsPreparation = 10;
         $tempsCuisson = 20;
         $difficulte = 1;
-        $categorie = 1;
+        $categorie = 2;
         $ingredients = [2, 4];
+        $quantite = [2, 4];
         
        
-
         if ($nomRecette == null || $instruction == null || $tempsPreparation == null || $tempsCuisson == null || $difficulte == null || $ingredients == null) {
             $this->expectException(Exception::class);
         }
@@ -64,9 +64,9 @@ class RecetteTest extends TestCase
             $ingredientsRecette[] = $this->ingredientDAO->getIngredientsById($ingredient);
         }
 
-
+        var_dump($ingredientsRecette);
         $recette = new Recette(null, $nomRecette, $instruction, $tempsPreparation, $tempsCuisson, $difficulte,  $categorie, $ingredientsRecette);
-        $this->recetteDAO->addRecette($recette);
+        $this->recetteDAO->addRecette($recette, $quantite);
 
         $addedRecette = $this->recetteDAO->getRecetteById(3);
 
