@@ -1,6 +1,8 @@
+
 /phpunit.xml
-/vendor
 /composer.json
 /composer.lock
 /phpunit.xml
-/phpunit.resutl.cache
+/composer.json
+/composer.lock
+/vendor
