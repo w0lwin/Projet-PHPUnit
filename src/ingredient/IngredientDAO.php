@@ -1,5 +1,5 @@
 <?php
-
+require_once('Ingredient.php');
 
 class IngredientDAO{
     private $db;
@@ -9,25 +9,70 @@ class IngredientDAO{
     }
 
     public function getIngredientsById($id){
-        $sql = "SELECT * FROM ingredient WHERE ingredient_id = :id";
+
+        if($id == null){
+            throw new Exception('L\'id de l\'ingrédient est obligatoire');
+        }
+
+        if(!is_int($id)){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre');
+        }
+
+        if($id < 0){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre positif');
+        }
+
+        $sql = "SELECT * FROM ingredients WHERE ingredient_id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $ingredient = new Ingredient($result['ingredient_id'], $result['nom_ingredient'], $result['unite_mesure'], $result['prix']);
+        $ingredient = new Ingredient($result['ingredient_id'], $result['nom_ingredient'], $result['unite_mesure']);
         return $ingredient;
+    }
+
+    public function getIngredients(){
+        $sql = "SELECT * FROM ingredients";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ingredients = [];
+        foreach($result as $row){
+            $ingredient = new Ingredient($row['ingredient_id'], $row['nom_ingredient'], $row['unite_mesure']);
+            array_push($ingredients, $ingredient);
+        }
+        return $ingredients;
     }
 
     public function addIngredient(Ingredient $ingredient){
         $nom_ingredient = $ingredient->getNomIngredient();
         $unite_mesure = $ingredient->getUniteMesure();
-        $prix = $ingredient->getPrix();
 
-        $sql = "INSERT INTO ingredient (nom_ingredient, unite_mesure, prix) VALUES (:nom_ingredient, :unite_mesure, :prix)";
+        $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
+
+        if($nom_ingredient == null || $unite_mesure == null){
+            throw new Exception('Le nom de l\'ingrédient et l\'unité de mesure sont obligatoires');
+        }
+
+        if(!in_array($unite_mesure, $unites_mesures)){
+            throw new Exception('L\'unité de mesure n\'est pas valide');
+        }
+
+        $this->getIngredients();
+        foreach($this->getIngredients() as $ingredient){
+            if($ingredient->getNomIngredient() == $nom_ingredient){
+                throw new Exception('L\'ingrédient existe déjà');
+            }
+        }
+
+        if(!is_string($nom_ingredient)){
+            throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
+        }
+
+        $sql = "INSERT INTO ingredients (nom_ingredient, unite_mesure) VALUES (:nom_ingredient, :unite_mesure)";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':nom_ingredient', $nom_ingredient);
-        $stmt->bindValue(':unite_mesure', $unite_mesure);
-        $stmt->bindValue(':prix', $prix);
+        $stmt->bindParam(':nom_ingredient', $nom_ingredient);
+        $stmt->bindParam(':unite_mesure', $unite_mesure);
         $stmt->execute();
     }
 
@@ -35,21 +80,56 @@ class IngredientDAO{
         $ingredient_id = $ingredient->getIngredientId();
         $nom_ingredient = $ingredient->getNomIngredient();
         $unite_mesure = $ingredient->getUniteMesure();
-        $prix = $ingredient->getPrix();
-        
-        $sql = "UPDATE ingredient SET nom_ingredient = :nom_ingredient, unite_mesure = :unite_mesure, prix = :prix WHERE ingredient_id = :ingredient_id";
+
+        $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
+
+        if($ingredient_id == null){
+            throw new Exception('L\'id de l\'ingrédient, le nom de l\'ingrédient et l\'unité de mesure sont obligatoires');
+        }
+
+        if(!is_int($ingredient_id)){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre');
+        }
+
+        if($ingredient_id < 0){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre positif');
+        }
+
+        if(!in_array($unite_mesure, $unites_mesures)){
+            throw new Exception('L\'unité de mesure n\'est pas valide');
+        }
+
+        foreach($this->getIngredients() as $ingredient){
+            if($ingredient->getNomIngredient() == $nom_ingredient){
+                throw new Exception('L\'ingrédient existe déjà');
+            }
+        }
+
+        if(!is_string($nom_ingredient)){
+            throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
+        }
+
+        $sql = "UPDATE ingredients SET nom_ingredient = :nom_ingredient, unite_mesure = :unite_mesure WHERE ingredient_id = :ingredient_id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':ingredient_id', $ingredient_id);
-        $stmt->bindValue(':nom_ingredient', $nom_ingredient);
-        $stmt->bindValue(':unite_mesure', $unite_mesure);
-        $stmt->bindValue(':prix', $prix);
+        $stmt->bindParam(':ingredient_id', $ingredient_id);
+        $stmt->bindParam(':nom_ingredient', $nom_ingredient);
+        $stmt->bindParam(':unite_mesure', $unite_mesure);
         $stmt->execute();
     }
 
     public function deleteIngredient($ingredient_id){
-        $sql = "DELETE FROM ingredient WHERE ingredient_id = :ingredient_id";
+
+        if($ingredient_id == null){
+            throw new Exception('L\'id de l\'ingrédient est obligatoire');
+        }
+
+        if(!is_int($ingredient_id)){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre');
+        }
+
+        $sql = "DELETE FROM ingredients WHERE ingredient_id = :ingredient_id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':ingredient_id', $ingredient_id);
+        $stmt->bindParam(':ingredient_id', $ingredient_id);
         $stmt->execute();
     }
 

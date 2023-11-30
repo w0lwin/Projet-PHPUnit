@@ -4,13 +4,11 @@ class Ingredient{
     private $ingredient_id;
     private $nom_ingredient;
     private $unite_mesure;
-    private $prix;
 
-    public function __construct($ingredient_id, $nom_ingredient, $unite_mesure, $prix){
+    public function __construct($ingredient_id, $nom_ingredient, $unite_mesure){
         $this->ingredient_id = $ingredient_id;
         $this->nom_ingredient = $nom_ingredient;
         $this->unite_mesure = $unite_mesure;
-        $this->prix = $prix;
     }
 
     public function getIngredientId(){
@@ -25,10 +23,6 @@ class Ingredient{
         return $this->unite_mesure;
     }
 
-    public function getPrix(){
-        return $this->prix;
-    }
-
     public function setNomIngredient($nom_ingredient){
         $this->nom_ingredient = $nom_ingredient;
     }
@@ -37,11 +31,7 @@ class Ingredient{
         $this->unite_mesure = $unite_mesure;
     }
 
-    public function setPrix($prix){
-        $this->prix = $prix;
-    }
 
-    
 }
 
 
