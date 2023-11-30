@@ -6,7 +6,7 @@ class Categorie {
     protected $nom_categorie;
 
     // fonction construct
-    public function __construct($id, $nom){
+    public function __construct($categorie_id, $nom_categorie){
         $this->categorie_id = $categorie_id;
         $this->nom_categorie = $nom_categorie;
     }

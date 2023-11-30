@@ -1,6 +1,6 @@
 <?php
 
-require_once(Categorie.php);
+require_once("Categorie.php");
 
 class CategorieDAO{
     private $db;
@@ -12,6 +12,13 @@ class CategorieDAO{
     // CREATE
     public function ajouterCategorie(Categorie $categorie) {
         $nomCategorie = $categorie->getNomCategorie();
+
+        if(is_int($nomCategorie)){
+            throw new Exception('string obligatoire');
+        }
+        if($nomCategorie == null){
+            throw new Exception('champs vide');
+        }
     
         $query = "INSERT INTO categories (nom_categorie) VALUES (:nomCategorie)";
         $stmt = $this->db->prepare($query);
@@ -26,29 +33,52 @@ class CategorieDAO{
         $categories = [];
 
         $stmt->execute();
-        $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($stmt as $row){
-            $categorie = new Categorie($row['categorie_id'], $row['nom_categorie']);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($row as $e){
+            $categorie = new Categorie($e['categorie_id'], $e['nom_categorie']);
             $categories[] = $categorie;
         }
         return $categories;
     }
 
-    public function getCategorieById($categorieId) {
+    public function getCategorieById($categorie_Id) {
         $query = "SELECT * FROM categories WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
-
+        $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
+    
         $stmt->execute();
-        $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return new Categorie($row['categorie_id'], $row['nom_categorie']);
+        if($categorie_Id == null){
+            throw new Exception('champs vide');
+        }
+        if(is_string($categorie_Id)){
+            throw new Exception('int obligatoire');
+        }
+        if($categorie_Id < 1){
+            throw new Exception('valeur negatif non autorise');
+        }
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        // var_dump($row);
+        if ($row) {
+            return new Categorie($row['categorie_id'], $row['nom_categorie']);
+        } else {
+            return null;
+        }
     }
+    
 
     // UPDATE
-    public function modifierCategorie(Categorie $categorie) {
+    public function updateCategorie(Categorie $categorie) {
         $categorieId = $categorie->getCategorieId();
         $nouveauNom = $categorie->getNomCategorie();
+
+        if($categorieId == null || $nouveauNom == null){
+            throw new Exception("champ vide");
+        }
+        if($categorieId < 1){
+            throw new Exception("valeur negatif non autorisé");
+        }
 
         $query = "UPDATE categories SET nom_categorie = :nouveauNom WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
@@ -58,10 +88,15 @@ class CategorieDAO{
     }
 
     // DELETE
-    public function supprimerCategorie($categorieId) {
+    public function deleteCategorie($categorie_Id) {
         $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
+
+        if($categorie_Id == null){
+            throw new Exception('champs vide');
+        }
+
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
+        $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
