@@ -73,6 +73,13 @@ class CategorieDAO{
         $categorieId = $categorie->getCategorieId();
         $nouveauNom = $categorie->getNomCategorie();
 
+        if($categorieId == null || $nouveauNom == null){
+            throw new Exception("champ vide");
+        }
+        if($categorieId < 1){
+            throw new Exception("valeur negatif non autorisé");
+        }
+
         $query = "UPDATE categories SET nom_categorie = :nouveauNom WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
