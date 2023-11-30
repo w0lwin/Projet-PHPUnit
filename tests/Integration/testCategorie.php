@@ -61,14 +61,25 @@ class testCategorie extends TestCase{
     // }
 
     // public function testGetCategorieById(){
-    //     $categories = $this->categorie->getCategorieById(1);
+    //     $categories = $this->categorie->getCategorieById(2);
+
+    //     if($categories == null){
+    //         $this->expectException(Exception::class);
+    //     }
+    //     if(is_string($categories)){
+    //         $this->expectException(Exception::class);
+    //     }
+    //     $categorieId = $categories->getCategorieId();
+    //     if($categorieId < 1){
+    //         $this->expectException(Exception::class);
+    //     }
 
     //     $this->assertInstanceOf(Categorie::class, $categories);
-    //     $this->assertEquals(1, $categories->getCategorieId());
+    //     $this->assertEquals(2, $categories->getCategorieId());
     // }
     
     // public function testUpdateCategorie(){
-    //     $id = 1;
+    //     $id = 2;
     //     $categories = $this->categorie->getCategorieById($id);
     //     $this->assertInstanceOf(Categorie::class, $categories);
     //     if ($categories instanceof Categorie) {

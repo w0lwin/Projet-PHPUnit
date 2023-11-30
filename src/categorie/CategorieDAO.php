@@ -48,8 +48,18 @@ class CategorieDAO{
     
         $stmt->execute();
 
+        if($categorie_Id == null){
+            throw new Exception('champs vide');
+        }
+        if(is_string($categorie_Id)){
+            throw new Exception('int obligatoire');
+        }
+        if($categorie_Id < 1){
+            throw new Exception('valeur negatif non autorise');
+        }
+
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        var_dump($row);
+        // var_dump($row);
         if ($row) {
             return new Categorie($row['categorie_id'], $row['nom_categorie']);
         } else {
