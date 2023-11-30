@@ -1,6 +1,6 @@
 <?php
 
-class Manager{
+class ManagerDAO{
     private $pdo;
 
     public function __construct($pdo){
