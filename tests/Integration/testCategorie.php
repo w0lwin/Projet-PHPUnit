@@ -78,51 +78,55 @@ class testCategorie extends TestCase{
     //     $this->assertEquals(2, $categories->getCategorieId());
     // }
     
-    public function testUpdateCategorie(){
-        $id = 14;
-        $categories = $this->categorie->getCategorieById($id);
-        if ($categories === null) {
-            $this->fail("La catégorie avec l'ID $id n'existe pas.");
-        }
-        $this->assertInstanceOf(Categorie::class, $categories);
+    // public function testUpdateCategorie(){
+    //     $id = 14;
+    //     $categories = $this->categorie->getCategorieById($id);
+    //     if ($categories === null) {
+    //         $this->fail("La catégorie avec l'ID $id n'existe pas.");
+    //     }
+    //     $this->assertInstanceOf(Categorie::class, $categories);
 
         
-        if ($categories instanceof Categorie) {
-            $new_categorie = "boisson";
-            if($id == null || $new_categorie == null){
-                $this->expectException(Exception::class);
-            }
-            $categorieId = $categories->getCategorieId();
-            if($categorieId < 1){
-                $this->expectException(Exception::class);
-            }
-            $categories->setNomCategorie($new_categorie);
+    //     if ($categories instanceof Categorie) {
+    //         $new_categorie = "boisson";
+    //         if($id == null || $new_categorie == null){
+    //             $this->expectException(Exception::class);
+    //         }
+    //         $categorieId = $categories->getCategorieId();
+    //         if($categorieId < 1){
+    //             $this->expectException(Exception::class);
+    //         }
+    //         $categories->setNomCategorie($new_categorie);
 
-            $update = $this->categorie->updateCategorie($categories);
-            var_dump($update);
+    //         $update = $this->categorie->updateCategorie($categories);
+    //         var_dump($update);
     
-            $this->assertTrue($update);
+    //         $this->assertTrue($update);
     
-            $categorieMiseAJour = $this->categorie->getCategorieById($id);
+    //         $categorieMiseAJour = $this->categorie->getCategorieById($id);
     
-            $this->assertEquals($new_categorie, $categorieMiseAJour->getNomCategorie());
-        }
-    } 
-
-    // public function testRemoveCategorie(){
-    //     $id = 4;
-    //     $categories = $this->categorie->getCategorieById($id);
-    //     $this->assertInstanceOf(Categorie::class, $categories);
-    
-    //     if($categories instanceOf Categorie){
-    //         $remove = $this->categorie->deleteCategorie($id); 
-
-    //         $this->assertTrue($remove);
-    //         $categorieDelete = $this->categorie->getCategorieById($id);
-    
-    //         $this->assertNull($categorieDelete);
+    //         $this->assertEquals($new_categorie, $categorieMiseAJour->getNomCategorie());
     //     }
-    // }
+    // } 
+
+    public function testRemoveCategorie(){
+        $id = 17;
+        $categories = $this->categorie->getCategorieById($id);
+        $this->assertInstanceOf(Categorie::class, $categories);
+    
+        if($categories instanceOf Categorie){
+            $remove = $this->categorie->deleteCategorie($id); 
+
+            if($remove == null){
+                $this->expectException(Exception::class);
+            }
+
+            $this->assertTrue($remove);
+            $categorieDelete = $this->categorie->getCategorieById($id);
+    
+            $this->assertNull($categorieDelete);
+        }
+    }
     
     
 

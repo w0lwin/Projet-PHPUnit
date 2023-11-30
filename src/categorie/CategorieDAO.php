@@ -90,6 +90,11 @@ class CategorieDAO{
     // DELETE
     public function deleteCategorie($categorie_Id) {
         $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
+
+        if($categorie_Id == null){
+            throw new Exception('champs vide');
+        }
+
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
         return $stmt->execute();
