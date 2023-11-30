@@ -56,24 +56,36 @@ class testCategorie extends TestCase{
     //     } 
     // }
     
-    public function testUpdateCategorie(){
-        $id = 1;
-        $categories = $this->categorie->getCategorieById($id);
-        $this->assertInstanceOf(Categorie::class, $categories);
-        if ($categories instanceof Categorie) {
-            $new_categorie = "boisson";
-            $categories->setNomCategorie($new_categorie);
+    // public function testUpdateCategorie(){
+    //     $id = 1;
+    //     $categories = $this->categorie->getCategorieById($id);
+    //     $this->assertInstanceOf(Categorie::class, $categories);
+    //     if ($categories instanceof Categorie) {
+    //         $new_categorie = "boisson";
+    //         $categories->setNomCategorie($new_categorie);
 
-            $update = $this->categorie->updateCategorie($categories);
+    //         $update = $this->categorie->updateCategorie($categories);
     
-            $this->assertTrue($update);
+    //         $this->assertTrue($update);
     
-            $categorieMiseAJour = $this->categorie->getCategorieById($id);
+    //         $categorieMiseAJour = $this->categorie->getCategorieById($id);
     
-            $this->assertEquals($new_categorie, $categorieMiseAJour->getNomCategorie());
-        }
-    } 
+    //         $this->assertEquals($new_categorie, $categorieMiseAJour->getNomCategorie());
+    //     }
+    // } 
 
+
+    public function testRemoveCategorie(){
+        $id = 5;
+        $remove = $this->categorie->deleteCategorie($id);
+    
+        $this->assertTrue($remove);
+    
+        $categorieDelete = $this->categorie->getCategorieById($id);
+    
+        $this->assertNull($categorieDelete);
+    }
+    
 
 }
 

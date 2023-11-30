@@ -64,10 +64,10 @@ class CategorieDAO{
     }
 
     // DELETE
-    public function deleteCategorie($categorieId) {
+    public function deleteCategorie($categorie_Id) {
         $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
+        $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
