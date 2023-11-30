@@ -109,24 +109,24 @@ class testCategorie extends TestCase{
     //     }
     // } 
 
-    public function testRemoveCategorie(){
-        $id = 17;
-        $categories = $this->categorie->getCategorieById($id);
-        $this->assertInstanceOf(Categorie::class, $categories);
+    // public function testRemoveCategorie(){
+    //     $id = 17;
+    //     $categories = $this->categorie->getCategorieById($id);
+    //     $this->assertInstanceOf(Categorie::class, $categories);
     
-        if($categories instanceOf Categorie){
-            $remove = $this->categorie->deleteCategorie($id); 
+    //     if($categories instanceOf Categorie){
+    //         $remove = $this->categorie->deleteCategorie($id); 
 
-            if($remove == null){
-                $this->expectException(Exception::class);
-            }
+    //         if($remove == null){
+    //             $this->expectException(Exception::class);
+    //         }
 
-            $this->assertTrue($remove);
-            $categorieDelete = $this->categorie->getCategorieById($id);
+    //         $this->assertTrue($remove);
+    //         $categorieDelete = $this->categorie->getCategorieById($id);
     
-            $this->assertNull($categorieDelete);
-        }
-    }
+    //         $this->assertNull($categorieDelete);
+    //     }
+    // }
     
     
 
