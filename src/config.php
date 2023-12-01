@@ -20,11 +20,4 @@ try {
 }
 ?>
 
-    // Configuration de PDO pour générer des exceptions en cas d'erreur
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    // En cas d'erreur de connexion, affiche un message d'erreur et arrête le script
-    echo "Erreur de connexion à la base de données: " . $e->getMessage();
-    die();
-}
-?>
+

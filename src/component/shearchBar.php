@@ -5,6 +5,8 @@ require_once '../config.php';
 function shearch(){
     global $bdd;
 
+    $recettes = []; // Initialisez $recettes ici
+
     if (isset($_POST['shearchBar'])) {
         $shearchBar = $_POST['shearchBar'];
 
@@ -13,6 +15,11 @@ function shearch(){
         // Récupérer les recettes trouvées
         $recettes = $recetteDAO->getRecetteByTitle($shearchBar);
     }
+
+    return $recettes;
+}
+
+$recettes = shearch();
 ?>
 
 <!DOCTYPE html>
@@ -23,30 +30,31 @@ function shearch(){
     <title>shearchBar</title>
 </head>
 <body>
-    <p>Rechercher une recette</p>
-    <form action="shearchBar.php" method="post">
-        <input type="text" name="shearchBar" id="shearchBar">
-        <input type="submit" value="Rechercher">
-    </form>
+    <div>
+        <p>Rechercher une recette</p>
+        <form action="" method="post">
+            <input type="text" name="shearchBar" id="shearchBar">
+            <input type="submit" value="Rechercher">
+        </form>
+    </div>
 
     <!-- Affichage des recettes trouvées -->
-    <?php if (isset($recettes) && !empty($recettes)): ?>
-        <h2>Résultats de la recherche :</h2>
-        <ul>
-            <?php foreach ($recettes as $recette): ?>
-                <li>
-                    <a href="../detailsRecette.php?id=<?php echo $recette->getId(); ?>">
-                        <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
-                        <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+    <?php if (!empty($recettes)): ?>
+        <div>
+            <h2>Résultats de la recherche :</h2>
+            <ul>
+                <?php foreach ($recettes as $recette): ?>
+                    <li>
+                        <a href="detailsRecette.php?id=<?php echo $recette->getId(); ?>">
+                            <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
+                            <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     <?php else: ?>
         <p>Aucune recette trouvée.</p>
     <?php endif; ?>
 </body>
 </html>
-<?php } ?>
-
-<?php shearch(); ?>

@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../Css/index.css">
+    <!-- <link rel="stylesheet" href="../Css/index.css"> -->
 </head>
-<body>
+
+
+<body> 
     <header>
-        <a href="../index.php">Home</a>
+        <a href="../../index.php">Home</a>
         <a href="ajout.php">ajout</a>
-        <a href="recherche.php">Recherche</a>
+        <a href="shearchBar.php">Recherche</a>
     </header>
     <h1>Recette</h1>
+
+    
     <?php
-    require_once('../src/config.php');
-    require_once('../src/recette/RecetteDAO.php');
-    require_once('../src/recette/Recette.php');
+    require_once('../config.php');
+    require_once('../recette/RecetteDAO.php');
     global $bdd;
 
     $recetteDAO = new RecetteDAO($bdd);

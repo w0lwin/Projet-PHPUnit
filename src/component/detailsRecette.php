@@ -1,6 +1,7 @@
 <?php
 require_once '../recette/RecetteDAO.php';
 require_once '../config.php';
+
 function details(){
     global $bdd;
     if (isset($_GET['id'])) {
