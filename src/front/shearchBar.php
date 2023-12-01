@@ -15,7 +15,13 @@
 </body>
 </html>
     <?php
-        require_once '../recette/RecetteDAO.php';
-        $recetteDAO = new RecetteDAO();
-        $recetteDAO->getRecetteByTitle($_POST['shearchBar']);
+
+        $recetteDAO =  GlobalVariable::$recetteDAO;
+        if ($recetteDAO !== null) {
+            $recetteDAO->getRecetteByTitle($_POST['shearchBar']);
+        } else {
+            echo "Erreur : objet RecetteDAO non initialisé.";
+        }
+        
+
     ?>

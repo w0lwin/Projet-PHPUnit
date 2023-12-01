@@ -1,10 +1,15 @@
 <?php
 
+require_once 'recette/RecetteDAO.php';
+require_once 'ingredient/IngredientDAO.php';
+require_once 'categorie/CategorieDAO.php';
+
+
 class GlobalVariable
 {
     public static $ingredientDAO;
     public static $recetteDAO;
-    public static $categorieDAP;
+    public static $categorieDAO; 
     
     public static function init()
     {
@@ -12,6 +17,5 @@ class GlobalVariable
         self::$recetteDAO = new RecetteDAO(Connection::getConnection());
         self::$categorieDAO = new CategorieDAO(Connection::getConnection());
     }
-
 }
 ?>

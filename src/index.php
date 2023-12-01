@@ -8,16 +8,17 @@
 </head>
 <body>
     <p>Coucou</p>
-    <!-- texte cliquable qui envoie sur la shearch bar -->
     <a href="front/shearchBar.php">Rechercher un film</a>
 </body>
 </html>
 
 
 <?php
+require_once 'config.php';
+require_once 'GlobalVariable.php';
 
-require_once 'src/recette/RecetteDAO.php';
-require_once 'src/ingredient/IngredientDAO.php';
-require_once 'src/categorie/CategorieDAO.php';
+GlobalVariable::$recetteDAO = new RecetteDAO($pdo);
+GlobalVariable::$ingredientDAO = new IngredientDAO($pdo);
+GlobalVariable::$categorieDAO = new CategorieDAO($pdo);
 
 ?>

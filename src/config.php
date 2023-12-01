@@ -9,7 +9,7 @@ try {
     $port = "8090";
 
     // Création d'une instance de PDO pour la connexion à la BDD
-    $bdd = new PDO("mysql:host=$hote;dbname=$nomDeLaBase; port=$8090", $utilisateur, $motDePasse);
+    $bdd = new PDO("mysql:host=$hote;dbname=$nomDeLaBase;port=$port", $utilisateur, $motDePasse);
 
     // Configuration de PDO pour générer des exceptions en cas d'erreur
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,3 +18,4 @@ try {
     echo "Erreur de connexion à la base de données: " . $e->getMessage();
     die();
 }
+?>
