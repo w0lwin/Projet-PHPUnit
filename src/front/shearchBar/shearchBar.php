@@ -2,7 +2,7 @@
 require_once '../../recette/RecetteDAO.php';
 require_once '../../config.php';
 
-function shear(){
+function shearch(){
     global $bdd;
 
     if (isset($_POST['shearchBar'])) {
@@ -14,6 +14,11 @@ function shear(){
         $recettes = $recetteDAO->getRecetteByTitle($shearchBar);
     }
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -34,11 +39,8 @@ function shear(){
         <ul>
             <?php foreach ($recettes as $recette): ?>
                 <li>
+                    <a href="detailsRecette.php?id=<?php echo $recette->getId(); ?>">
                     <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
-                    <p>ID: <?php echo $recette->getId(); ?></p>
-                    <p>Instructions: <?php echo $recette->getInstruction(); ?></p>
-                    <p>Temps de préparation: <?php echo $recette->getTempsPreparation(); ?></p>
-                    <p>Temps de cuisson: <?php echo $recette->getTempsCuisson(); ?></p>
                     <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
                     
                 </li>
@@ -51,4 +53,4 @@ function shear(){
 </html>
 <?php } ?>
 
-<?php shear(); ?>
+<?php shearch(); ?>
