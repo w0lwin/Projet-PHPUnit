@@ -206,11 +206,11 @@ class RecetteDAO{
         $categorie_id = $recette->getCategorieId();
         $ingredients = $recette->getIngredients();
     
-        if ($id == null || $nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
+        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
             throw new InvalidArgumentException('id, nom_recette, instruction, temps_preparation, temps_cuisson, difficulte, categorie_id, and ingredients should not be null');
         }
     
-        if (!is_int($id) || !is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
+        if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
             throw new InvalidArgumentException('id, temps_preparation, temps_cuisson, and difficulte should be integers');
         }
     

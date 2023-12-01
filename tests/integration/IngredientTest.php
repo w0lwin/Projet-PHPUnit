@@ -92,7 +92,7 @@ class IngredientTest extends TestCase {
 
 
         $ingredient = $this->ingredientDAO->getIngredientsById($ingredient_id);
-        $nom_ingredient = 'Pomme de terre';
+        $nom_ingredient = 'carrot';
         $unite_mesure = 'g';
         
         $unite_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
@@ -124,7 +124,7 @@ class IngredientTest extends TestCase {
         $ingredient->setUniteMesure($unite_mesure);
         $this->ingredientDAO->updateIngredient($ingredient);
         $updatedIngredient = $this->ingredientDAO->getIngredientsById($ingredient_id);
-        $this->assertEquals('Pomme de terre', $updatedIngredient->getNomIngredient());
+        $this->assertEquals('carrot', $updatedIngredient->getNomIngredient());
         $this->assertEquals('g', $updatedIngredient->getUniteMesure());
     }
 
@@ -144,6 +144,7 @@ class IngredientTest extends TestCase {
         $ingredients = $this->ingredientDAO->getIngredients();
         $this->assertEquals(3, count($ingredients));
     }
+
 
 }
 ?>

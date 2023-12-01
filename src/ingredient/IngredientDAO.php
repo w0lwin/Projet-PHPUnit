@@ -135,6 +135,33 @@ class IngredientDAO{
         $stmt->execute();
     }
 
+    public function getNomIngredientById($id) {
+        if ($id == null) {
+            throw new Exception('L\'id de l\'ingrédient est obligatoire');
+        }
+    
+        if (!is_int($id)) {
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre');
+        }
+    
+        if ($id < 0) {
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre positif');
+        }
+    
+        $sql = "SELECT nom_ingredient FROM ingredients WHERE ingredient_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if (!$result) {
+            throw new Exception('Aucun ingrédient trouvé avec cet ID');
+        }
+    
+        return $result['nom_ingredient'];
+    }
+    
+
 }
 
 
