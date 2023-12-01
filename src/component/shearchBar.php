@@ -1,6 +1,6 @@
 <?php
-require_once '../../recette/RecetteDAO.php';
-require_once '../../config.php';
+require_once '../recette/RecetteDAO.php';
+require_once '../config.php';
 
 function shearch(){
     global $bdd;

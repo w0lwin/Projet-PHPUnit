@@ -1,15 +1,18 @@
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page principal</title>
+    <title>Saint recette</title>
+    <link rel="stylesheet" href="Css/index.css">
 </head>
 <body>
-    <p>Coucou</p>
-    <a href="front/shearchBar/shearchBar.php">Rechercher un film</a>
+    <header>
+        <a href="index.php">Home</a>
+        <a href="component/shearchBar.php">Recherche</a>
+        <a href="component/ajout.php">ajout</a>
+        <a href="component/recette.php">recette</a>
+    </header>
+    <h1>Accueil Saint Recette</h1>
 </body>
 </html>
-
-
