@@ -2,7 +2,7 @@
 require_once '../../recette/RecetteDAO.php';
 require_once '../../config.php';
 
-function shearch(){
+function shear(){
     global $bdd;
 
     if (isset($_POST['shearchBar'])) {
@@ -40,7 +40,7 @@ function shearch(){
                     <p>Temps de préparation: <?php echo $recette->getTempsPreparation(); ?></p>
                     <p>Temps de cuisson: <?php echo $recette->getTempsCuisson(); ?></p>
                     <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
-
+                    
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -51,4 +51,4 @@ function shearch(){
 </html>
 <?php } ?>
 
-<?php shearch(); ?>
+<?php shear(); ?>
