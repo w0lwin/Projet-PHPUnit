@@ -12,7 +12,6 @@ function details($recetteDAO){
         $id = $_GET['id'];
         // convertir en int
         $id = intval($id);
-        var_dump($id);
         
         // Récupérer la recette
         $recette = $recetteDAO->getRecetteById($id);
@@ -50,7 +49,10 @@ $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
                             <p>Quantité: <?php echo $ingredient['quantite']; ?></p>
                         </li>
                     <?php endforeach; ?>
-                </ul>                    
+                </ul>  
+
+                <!-- Ajout du bouton de modification -->
+                <a href="updateRecette.php?id=<?php echo $recette->getId(); ?>">Modifier la recette</a>
             </li>
         </ul>
     <?php else: ?>
