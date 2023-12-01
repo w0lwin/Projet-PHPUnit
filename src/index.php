@@ -12,3 +12,12 @@
     <a href="front/shearchBar.php">Rechercher un film</a>
 </body>
 </html>
+
+
+<?php
+
+require_once 'src/recette/RecetteDAO.php';
+require_once 'src/ingredient/IngredientDAO.php';
+require_once 'src/categorie/CategorieDAO.php';
+
+?>
