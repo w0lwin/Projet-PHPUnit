@@ -10,40 +10,43 @@ class RecetteDAO{
     }
 
     public function getRecetteById($id){
-
         if ($id == null){
             throw new InvalidArgumentException('id should not be null');
         }
-
+    
         if (!is_int($id)){
             throw new InvalidArgumentException('id should be an integer');
         }
-
+    
         $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($result == null){
             throw new InvalidArgumentException('no recette with id ' . $id . ' found');
         }
-
+    
         $ingredients = $this->getIngredientsRecette($id);
+        $ingredientIds = [];
+    
         foreach ($ingredients as $ingredient) {
-            $ingredients[] = $ingredient['id'];
+            $ingredientIds[] = $ingredient['id'];
         }
-
-        $recette = new Recette($result['id'],
-        $result['nom_recette'],
-        $result['instruction'],
-        $result['temps_preparation'],
-        $result['temps_cuisson'],
-        $result['difficulte'],
-        $result['categories_id'],
-        $ingredients);
-
+    
+        $recette = new Recette(
+            $result['id'],
+            $result['nom_recette'],
+            $result['instruction'],
+            $result['temps_preparation'],
+            $result['temps_cuisson'],
+            $result['difficulte'],
+            $result['categories_id'],
+            $ingredientIds
+        );
+    
         return $recette;
-
     }
+    
 
     public function getRecetteByTitle($nom_recette){
         if ($nom_recette == null){

@@ -15,10 +15,6 @@ function shearch(){
     }
 ?>
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -39,10 +35,10 @@ function shearch(){
         <ul>
             <?php foreach ($recettes as $recette): ?>
                 <li>
-                    <a href="detailsRecette.php?id=<?php echo $recette->getId(); ?>">
-                    <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
-                    <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
-                    
+                    <a href="../detailsRecette.php?id=<?php echo $recette->getId(); ?>">
+                        <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
+                        <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
