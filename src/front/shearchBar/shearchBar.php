@@ -2,7 +2,7 @@
 require_once '../../recette/RecetteDAO.php';
 require_once '../../config.php';
 
-function shear(){
+function shearch(){
     global $bdd;
 
     if (isset($_POST['shearchBar'])) {
@@ -51,4 +51,4 @@ function shear(){
 </html>
 <?php } ?>
 
-<?php shear(); ?>
+<?php shearch(); ?>
