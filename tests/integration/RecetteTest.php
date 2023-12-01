@@ -185,6 +185,23 @@ class RecetteTest extends TestCase
 
         $this->assertNull($recette);
     }
+
+    public function testGetRecettesByTitle()
+    {
+        $title = 'Poulet';
+
+        if ($title == null) {
+            $this->expectException(InvalidArgumentException::class);
+        }
+
+        if (!is_string($title)) {
+            $this->expectException(InvalidArgumentException::class);
+        }
+        
+        $recettes = $this->recetteDAO->getRecettesByTitle($title);
+
+        $this->assertCount(2, $recettes);
+    }
 }
 
 ?>

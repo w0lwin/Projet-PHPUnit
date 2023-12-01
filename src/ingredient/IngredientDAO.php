@@ -1,5 +1,7 @@
 <?php
 require_once('Ingredient.php');
+require_once '../config.php';
+
 
 class IngredientDAO{
     private $db;

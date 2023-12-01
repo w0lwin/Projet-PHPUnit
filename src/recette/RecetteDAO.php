@@ -1,5 +1,4 @@
 <?php
-
 require_once 'Recette.php';
 
 class RecetteDAO{
@@ -11,49 +10,92 @@ class RecetteDAO{
     }
 
     public function getRecetteById($id){
-
         if ($id == null){
             throw new InvalidArgumentException('id should not be null');
         }
-
+    
         if (!is_int($id)){
             throw new InvalidArgumentException('id should be an integer');
         }
-
+    
         $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($result == null){
             throw new InvalidArgumentException('no recette with id ' . $id . ' found');
         }
-
+    
         $ingredients = $this->getIngredientsRecette($id);
+        $ingredientIds = [];
+    
         foreach ($ingredients as $ingredient) {
-            $ingredients[] = $ingredient['id'];
+            $ingredientIds[] = $ingredient['id'];
         }
-
-        $recette = new Recette($result['id'],
-        $result['nom_recette'],
-        $result['instruction'],
-        $result['temps_preparation'],
-        $result['temps_cuisson'],
-        $result['difficulte'],
-        $result['categories_id'],
-        $ingredients);
-
+    
+        $recette = new Recette(
+            $result['id'],
+            $result['nom_recette'],
+            $result['instruction'],
+            $result['temps_preparation'],
+            $result['temps_cuisson'],
+            $result['difficulte'],
+            $result['categories_id'],
+            $ingredientIds
+        );
+    
         return $recette;
-
     }
+    
 
-    public function getRecettes(){
+    public function getRecetteByTitle($nom_recette){
+        if ($nom_recette == null){
+            throw new InvalidArgumentException('nom_recette should not be null');
+        }
+    
+        if (!is_string($nom_recette)){
+            throw new InvalidArgumentException('nom_recette should be a string');
+        }
+    
+        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette LIKE :nom_recette");
+        $stmt->execute(['nom_recette' => "%$nom_recette%"]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        $recettes = [];
+        foreach ($results as $result) {
+            $id = $result['id'];
+            $ingredients = $this->getIngredientsRecette($id);
+            $ingredientIds = [];
+            foreach ($ingredients as $ingredient) {
+                $ingredientIds[] = $ingredient['id'];
+            }
+    
+            $recette = new Recette(
+                $id,
+                $result['nom_recette'],
+                $result['instruction'],
+                $result['temps_preparation'],
+                $result['temps_cuisson'],
+                $result['difficulte'],
+                $result['categories_id'],
+                $ingredientIds
+            );
+            
+            array_push($recettes, $recette);
+        }
+    
+        return $recettes;
+    }
+    public function getRecettes()
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $recettes = [];
     
         foreach ($result as $row) {
-            $id = $row['id']; // Définissez $id ici
+            // $id = $row['id'];
+            $id = intval($row['id']);
     
             $ingredients = $this->getIngredientsRecette($id);
             $ingredientIds = [];
@@ -72,7 +114,7 @@ class RecetteDAO{
                 $row['categories_id'],
                 $ingredientIds
             );
-            
+    
             array_push($recettes, $recette);
         }
     
@@ -95,7 +137,7 @@ class RecetteDAO{
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $ingredients = [];
         foreach ($result as $row) {
-            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['Quantite']];
+            $ingredient = ['id' => $row['ingredient_id'], 'quantite' => $row['Quantite'], 'recette_id'=> $row['recette_id']];
             array_push($ingredients, $ingredient);
         }
         return $ingredients;

@@ -1,5 +1,5 @@
 <?php
-
+require_once '../config.php';
 require_once("Categorie.php");
 
 class CategorieDAO{
