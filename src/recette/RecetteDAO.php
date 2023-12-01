@@ -45,44 +45,44 @@ class RecetteDAO{
 
     }
 
-    public function getRecetteByTitle($nom_recette) {
-        if ($nom_recette == null) {
+    public function getRecetteByTitle($nom_recette){
+        if ($nom_recette == null){
             throw new InvalidArgumentException('nom_recette should not be null');
         }
     
-        if (!is_string($nom_recette)) {
+        if (!is_string($nom_recette)){
             throw new InvalidArgumentException('nom_recette should be a string');
         }
     
-        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette = :nom_recette");
-        $stmt->execute(['nom_recette' => $nom_recette]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette LIKE :nom_recette");
+        $stmt->execute(['nom_recette' => "%$nom_recette%"]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-        if ($result === false) {
-            throw new InvalidArgumentException('no recette with nom_recette ' . $nom_recette . ' found');
+        $recettes = [];
+        foreach ($results as $result) {
+            $id = $result['id'];
+            $ingredients = $this->getIngredientsRecette($id);
+            $ingredientIds = [];
+            foreach ($ingredients as $ingredient) {
+                $ingredientIds[] = $ingredient['id'];
+            }
+    
+            $recette = new Recette(
+                $id,
+                $result['nom_recette'],
+                $result['instruction'],
+                $result['temps_preparation'],
+                $result['temps_cuisson'],
+                $result['difficulte'],
+                $result['categories_id'],
+                $ingredientIds
+            );
+            
+            array_push($recettes, $recette);
         }
     
-        $ingredients = $this->getIngredientsRecette($result['id']);
-        $ingredientIds = [];
-    
-        foreach ($ingredients as $ingredient) {
-            $ingredientIds[] = $ingredient['id'];
-        }
-    
-        $recette = new Recette(
-            $result['id'],
-            $result['nom_recette'],
-            $result['instruction'],
-            $result['temps_preparation'],
-            $result['temps_cuisson'],
-            $result['difficulte'],
-            $result['categories_id'],
-            $ingredientIds
-        );
-    
-        return $recette;
+        return $recettes;
     }
-    
     public function getRecettes(){
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");
         $stmt->execute();
