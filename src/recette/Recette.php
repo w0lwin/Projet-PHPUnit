@@ -8,8 +8,9 @@ class Recette{
     private $temps_cuisson;
     private $difficulte;
     private $categorie_id;
+    private $ingredients;
 
-    public function __construct($id, $nom_recette, $instruction, $temps_preparation, $temps_cuisson, $difficulte, $categorie_id){
+    public function __construct($id, $nom_recette, $instruction, $temps_preparation, $temps_cuisson, $difficulte, $categorie_id, $ingredients){
         $this->id = $id;
         $this->nom_recette = $nom_recette;
         $this->instruction = $instruction;
@@ -17,6 +18,7 @@ class Recette{
         $this->temps_cuisson = $temps_cuisson;
         $this->difficulte = $difficulte;
         $this->categorie_id = $categorie_id;
+        $this->ingredients = $ingredients;
     }
 
     public function getId(){
@@ -45,6 +47,10 @@ class Recette{
 
     public function getCategorieId(){
         return $this->categorie_id;
+    }
+
+    public function getIngredients(){
+        return $this->ingredients;
     }
 
     public function setNomRecette($nom_recette){
