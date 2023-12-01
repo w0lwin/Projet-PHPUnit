@@ -86,14 +86,16 @@ class RecetteDAO{
     
         return $recettes;
     }
-    public function getRecettes(){
+    public function getRecettes()
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $recettes = [];
     
         foreach ($result as $row) {
-            $id = $row['id']; // Définissez $id ici
+            // $id = $row['id'];
+            $id = intval($row['id']);
     
             $ingredients = $this->getIngredientsRecette($id);
             $ingredientIds = [];
@@ -112,7 +114,7 @@ class RecetteDAO{
                 $row['categories_id'],
                 $ingredientIds
             );
-            
+    
             array_push($recettes, $recette);
         }
     
