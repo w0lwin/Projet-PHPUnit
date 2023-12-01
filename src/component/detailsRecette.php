@@ -1,49 +1,56 @@
 <?php
 require_once '../recette/RecetteDAO.php';
+require_once '../ingredient/IngredientDAO.php';
 require_once '../config.php';
 
-function details(){
-    global $bdd;
+global $bdd;
+$recetteDAO = new RecetteDAO($bdd);
+$ingredientDAO = new IngredientDAO($bdd);
+
+function details($recetteDAO){
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
-        //convertir en int
+        // convertir en int
         $id = intval($id);
-
         var_dump($id);
-        $recetteDAO = new RecetteDAO($bdd);
         
         // Récupérer la recette
         $recette = $recetteDAO->getRecetteById($id);
-        
-        // Récupérer les ingrédients de la recette
-        $ingredients = $recetteDAO->getIngredientsRecette($id);
-        
+
+        return $recette; 
     }
 }
-details();
+
+$recette = details($recetteDAO);
+// Récupérer les ingrédients de la recette
+$ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Details recette</title>
-</head>
+
 <body>
-    <p>Details recette</p>
-    <?php if (isset($recette) && !empty($recette)): ?>
+    <?php if (!empty($recette)): ?>
         <h2>Details de la recette :</h2>
         <ul>
             <li>
                 <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
                 <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
-                <p>Temps de préparation: <?php echo $recette->getTempsPreparation(); ?></p>
-                <p>Temps de cuisson: <?php echo $recette->getTempsCuisson(); ?></p>
-                <p>Instructions: <?php echo $recette->getInstruction(); ?></p>
                 <!-- Affiche les différents ingrédients stockés dans $ingredients -->
-                <p>Ingrédients: <?php foreach ($ingredients as $ingredient): ?>
-                    <p><?php echo $ingredient['nom_ingredient']; ?></p>
-                <?php endforeach; ?></p>                    
+                <p>Ingrédients:</p>
+                <ul>
+                    <?php foreach ($ingredients as $ingredient): ?>
+                        <?php
+                        $id = $ingredient['id']; 
+                        $id = intval($id);
+                        $getIngredient = $ingredientDAO->getIngredientsById($id);
+                        ?>
+                        <li>
+                            <p>Nom: <?php echo $getIngredient->getNomIngredient(); ?></p>
+                            <p>Quantité: <?php echo $ingredient['quantite']; ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>                    
             </li>
         </ul>
     <?php else: ?>

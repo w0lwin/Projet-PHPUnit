@@ -64,6 +64,7 @@ class RecetteDAO{
         $recettes = [];
         foreach ($results as $result) {
             $id = $result['id'];
+            
             $ingredients = $this->getIngredientsRecette($id);
             $ingredientIds = [];
             foreach ($ingredients as $ingredient) {
