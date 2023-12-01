@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saint recette</title>
-    <link href="/Css/index.css">
+    <link rel="stylesheet" href="Css/index.css">
 </head>
 <body>
-    <h1>coucou</h1>
-    <h2>salut</h2>
+    <header>
+        <a href="index.php">Home</a>
+        <a href="component/recherche.php">Recherche</a>
+        <a href="component/ajout.php">ajout</a>
+        <a href="component/recette.php">recette</a>
+    </header>
+    <h1>Accueil Saint Recette</h1>
 </body>
 </html>
