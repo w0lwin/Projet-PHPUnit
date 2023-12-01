@@ -17,7 +17,7 @@
     <?php
     require_once '../recette/RecetteDAO.php';
     require_once '../config.php';
-    require_once '../ingredient/IngredientDAO.php';
+
 
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,8 +26,7 @@
             $recetteDAO = new RecetteDAO($bdd);
 
             
-            // Créer une instance de IngredientDAO
-            $ingredientDAO = new IngredientDAO($bdd);
+            
 
             // Récupérer les données du formulaire
             $nom_recette = $_POST['nom_recette'];
@@ -36,7 +35,7 @@
             $temps_cuisson = isset($_POST['temps_cuisson']) ? (int)$_POST['temps_cuisson'] : null;
             $difficulte = isset($_POST['difficulte']) ? (int)$_POST['difficulte'] : null;
             $categorie_id = isset($_POST['categorie_id']) ? (int)$_POST['categorie_id'] : null;
-            $ingredients = $_POST['ingredients'];
+            $ingredients = isset($_POST['ingredients']) ? (int)$_POST['ingredients'] : null;
             $quantites = $_POST['quantite']; // Nouveau tableau pour stocker les quantités
             
 
@@ -102,12 +101,26 @@
         <select name="categorie_id" required>
             <option value="1">Catégorie 1</option>
             <option value="2">Catégorie 2</option>
-            <!-- ... -->
         </select>
         
-        <label for="ingredients">Ingrédients </label>
-        <input type="text" name="ingredients" required>
-        </select>
+        <!-- <label for="ingredients">Ingrédients </label>
+        <input type="text" name="ingredients" required> -->
+        <label for="ingredients">Ingrédients:</label>
+        <?php
+            require_once '../ingredient/IngredientDAO.php';
+
+            // Créer une instance de IngredientDAO
+            $ingredientDAO = new IngredientDAO($bdd);
+
+            $ingredients = $ingredientDAO->getIngredients();
+
+            foreach ($ingredients as $ingredient) {
+                echo '<div>';
+                echo '<input type="checkbox" name="ingredients[]" value="' . $ingredient->getIngredientId() . '">';
+                echo '<label>' . $ingredient->getNomIngredient() . '</label>';
+                echo '</div>';
+            }
+        ?>
         <input type="submit" value="Ajouter la recette">
         
     </form>
