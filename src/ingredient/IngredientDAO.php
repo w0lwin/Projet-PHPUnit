@@ -152,8 +152,11 @@ class IngredientDAO{
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
-            throw new Exception('Aucun ingrédient trouvé avec ce nom'); 
+        if ($result) {
+            return $result['id'];
+        } else {
+        
+            return false;
         }
 
         return $result['ingredient_id'];
