@@ -119,8 +119,6 @@
             <option value="2">Catégorie 2</option>
         </select>
         
-        <!-- <label for="ingredients">Ingrédients </label>
-        <input type="text" name="ingredients" required> -->
         <label for="ingredients">Ingrédients:</label>
         <?php
             require_once '../ingredient/IngredientDAO.php';
