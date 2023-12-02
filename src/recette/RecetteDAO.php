@@ -231,31 +231,14 @@ class RecetteDAO{
 
 
 
-    public function updateIngredientsRecette($recetteId, $ingredientId, $quantite)
-    {
-
-        if ($recetteId == null || $ingredientId == null || $quantite == null){
-            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should not be null');
-        }
-
-        if (!is_int($recetteId) || !is_int($ingredientId) || !is_int($quantite)) {
-            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should be integers');
-        }
-
-        $stmt = $this->pdo->prepare("UPDATE recette_ingredients SET quantite = :quantite WHERE recette_id = :recette_id AND ingredient_id = :ingredient_id");
-        $stmt->bindParam(':recette_id', $recetteId);
-        $stmt->bindParam(':ingredient_id', $ingredientId);
-        $stmt->bindParam(':quantite', $quantite);
-        $stmt->execute();
-    }
-
-
+    
+    
     public function deleteRecette($id)
     {
         if ($id == null){
             throw new InvalidArgumentException('id should not be null');
         }
-
+        
         if (!is_int($id)) {
             throw new InvalidArgumentException('id should be integer');
         }
@@ -263,18 +246,18 @@ class RecetteDAO{
         $stmt = $this->pdo->prepare("DELETE FROM recettes WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-
+        
         $stmt2 = $this->pdo->prepare("DELETE FROM recette_ingredients WHERE recette_id = :id");
         $stmt2->bindParam(':id', $id);
         $stmt2->execute();
     }
-
+    
     public function deleteIngredientRecette($recetteId, $ingredientId)
     {
         if ($recetteId == null || $ingredientId == null){
             throw new InvalidArgumentException('recetteId and ingredientId should not be null');
         }
-
+        
         if (!is_int($recetteId) || !is_int($ingredientId)) {
             throw new InvalidArgumentException('recetteId and ingredientId should be integers');
         }
@@ -283,7 +266,43 @@ class RecetteDAO{
         $stmt->bindParam(':recette_id', $recetteId);
         $stmt->bindParam(':ingredient_id', $ingredientId);
         $stmt->execute();
-}
+    }
+    public function updateIngredientsRecette($recetteId, $ingredientId, $quantite)
+    {
+    
+        if ($recetteId == null || $ingredientId == null || $quantite == null){
+            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should not be null');
+        }
+    
+        if (!is_int($recetteId) || !is_int($ingredientId) || !is_int($quantite)) {
+            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should be integers');
+        }
+    
+        $stmt = $this->pdo->prepare("UPDATE recette_ingredients SET quantite = :quantite WHERE recette_id = :recette_id AND ingredient_id = :ingredient_id");
+        $stmt->bindParam(':recette_id', $recetteId);
+        $stmt->bindParam(':ingredient_id', $ingredientId);
+        $stmt->bindParam(':quantite', $quantite);
+        $stmt->execute();
+    }
+    
+    public function addIngredientRecette($recetteId, $ingredientId, $quantite)
+    {
+    
+        if ($recetteId == null || $ingredientId == null || $quantite == null){
+            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should not be null');
+        }
+    
+        if (!is_int($recetteId) || !is_int($ingredientId) || !is_int($quantite)) {
+            throw new InvalidArgumentException('recetteId, ingredientId, and quantite should be integers');
+        }
+    
+        $stmt = $this->pdo->prepare("INSERT INTO recette_ingredients (recette_id, ingredient_id, quantite) VALUES (:recette_id, :ingredient_id, :quantite)");
+        $stmt->bindParam(':recette_id', $recetteId);
+        $stmt->bindParam(':ingredient_id', $ingredientId);
+        $stmt->bindParam(':quantite', $quantite);
+        $stmt->execute();
+    }
+    
 }
 
 ?>
