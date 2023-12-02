@@ -27,10 +27,11 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
         $nouvelIngredient = sanitizeInput($_POST['nouvelIngredient']);
         $quantiteNouvelIngredient = intval($_POST['quantiteNouvelIngredient']);
 
-        // convertit en int
+        //convertit en int
         $quantiteNouvelIngredient = intval($quantiteNouvelIngredient);
 
-        // Créer un objet ingrédient avec le nom
+
+        //Créer un objet ingrédient avec le nom 
         $ingredient = new Ingredient(null, $nouvelIngredient, 'g');
 
         // Vérifier si l'ingrédient existe déjà
@@ -42,7 +43,7 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
             $ingredientId = intval($ingredientId);
 
             echo "L'ingrédient a été ajouté à la base de données";
-
+            
             // Ajouter l'ingrédient à la recette
             $recetteDAO->addIngredientRecette($existingRecette->getId(), $ingredientId, $quantiteNouvelIngredient);
 
@@ -53,8 +54,7 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
             $recetteDAO->updateIngredientRecette($existingRecette->getId(), $existingIngredient, $quantiteNouvelIngredient);
             // Rediriger vers la même page après l'ajout
             header('Location: updateRecette.php?id=' . $existingRecette->getId());
-        }
-    }
+        }}
 
     if (isset($_POST['submit'])) {
         $id = $_GET['id'];
@@ -76,15 +76,15 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
         // Récupérer les ingrédients actuels de la recette
         $ingredients = $recetteDAO->getIngredientsRecette($id);
 
-        // Mettre à jour les propriétés modifiables
-        $existingRecette->setNomRecette($nomRecette);
-        $existingRecette->setDifficulte($difficulte);
-        $existingRecette->setInstruction($instructions);
-        $existingRecette->setTempsPreparation($tempsPreparation);
-        $existingRecette->setTempsCuisson($tempsCuisson);
+        
+            // Mettre à jour les propriétés modifiables
+            $existingRecette->setNomRecette($nomRecette);
+            $existingRecette->setDifficulte($difficulte);
+            $existingRecette->setInstruction($instructions);
+            $existingRecette->setTempsPreparation($tempsPreparation);
+            $existingRecette->setTempsCuisson($tempsCuisson);
 
-        $recetteDAO->updateRecette($existingRecette);
-
+            $recetteDAO->updateRecette($existingRecette);
         if ($quantites > 0) {
             // Mettre à jour les ingrédients
             foreach ($ingredients as $ingredient) {
@@ -95,17 +95,18 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
             }
         }
 
-        // Supprimer les ingrédients marqués pour suppression
-        foreach ($deleteIngredients as $ingredientIdToDelete => $deleteFlag) {
-            if ($deleteFlag == '1') {
-                // Supprimer l'ingrédient seulement s'il reste au moins un ingrédient après la suppression
-                if (count($ingredients) - 1 > 0) {
-                    $recetteDAO->deleteIngredientRecette($id, $ingredientIdToDelete);
-                } else {
-                    echo "La recette doit avoir au moins un ingrédient.";
+            // Supprimer les ingrédients marqués pour suppression
+            foreach ($deleteIngredients as $ingredientIdToDelete => $deleteFlag) {
+                if ($deleteFlag == '1') {
+                    // Supprimer l'ingrédient seulement s'il reste au moins un ingrédient après la suppression
+                    if (count($ingredients) - 1 > 0) {
+                        $recetteDAO->deleteIngredientRecette($id, $ingredientIdToDelete);
+                    } else {
+                        echo "La recette doit avoir au moins un ingrédient.";
+                    }
                 }
-            }
-        }
+            
+        } 
 
         // header('Location: /detailsRecette.php?id=' . $id);
     }
@@ -170,8 +171,8 @@ function sanitizeInput($input)
                         <!-- Champ caché pour marquer l'ingrédient pour suppression -->
                         <input type="hidden" name="delete_ingredients[<?php echo $id; ?>]" id="delete_ingredient_<?php echo $id; ?>" value="0">
 
-                        <input type="checkbox" name="delete_ingredients[<?php echo $id; ?>]" id="delete_ingredient_<?php echo $id; ?>" value="1">
-                        <label for="delete_ingredient_<?php echo $id; ?>">Supprimer cet ingrédient</label>
+                        <input type="checkbox" name="delete_ingredients[]" value="<?php echo $id; ?>"> Supprimer cet ingrédient
+
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -179,7 +180,7 @@ function sanitizeInput($input)
             <input type="submit" name="submit" value="Valider les modifications">
         </form>
 
-        <!-- Ajout du formulaire d'ajout d'ingrédients -->
+                <!-- Ajout du formulaire d'ajout d'ingrédients -->
         <form action="updateRecette.php?id=<?php echo $recette->getId(); ?>" method="post">
             <h3>Ajouter un nouvel ingrédient :</h3>
             <label for="nouvelIngredient">Nom de l'ingrédient :</label>
@@ -198,7 +199,7 @@ function sanitizeInput($input)
         <script>
             function deleteIngredient(ingredientId) {
                 // Marquer l'ingrédient pour la suppression
-                document.getElementById('delete_ingredient_' + ingredientId).checked = true;
+                document.getElementById('delete_ingredient_' + ingredientId).value = '1';
             }
         </script>
 

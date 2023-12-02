@@ -52,6 +52,8 @@ class IngredientDAO{
 
         $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
 
+
+
         if($nom_ingredient == null || $unite_mesure == null){
             throw new Exception('Le nom de l\'ingrédient et l\'unité de mesure sont obligatoires');
         }
@@ -151,12 +153,11 @@ class IngredientDAO{
         $stmt->bindParam(':nom_ingredient', $nom_ingredient);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
+        
+        if (array_key_exists('id', $result)) {
             return $result['id'];
         } else {
-        
-            return false;
+            return null;
         }
 
         
