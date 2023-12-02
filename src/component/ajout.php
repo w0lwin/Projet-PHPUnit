@@ -36,12 +36,23 @@
             $difficulte = isset($_POST['difficulte']) ? (int)$_POST['difficulte'] : null;
             $categorie_id = isset($_POST['categorie_id']) ? (int)$_POST['categorie_id'] : null;
             $ingredientsStrings = isset($_POST['ingredients']) ? $_POST['ingredients'] : null;
-            $quantites = $_POST['quantite'];
+            $quantitesStrings = isset($_POST['quantite']) ? $_POST['quantite'] : null;
 
-            // Convertir les chaînes d'ingrédients en entiers
+            // Convertir les chaînes d'ingrédients et quantite en entiers
             $ingredients = array_map('intval', $ingredientsStrings);
+
+            $quantites = array_map('intval', $quantitesStrings);
+
+            // Filtrer les ingrédients et quantités pour exclure ceux sans quantité définie
+            $ingredientsWithQuantite = array_filter($ingredients, function($ingredientId) use ($quantites) {
+                return isset($quantites[$ingredientId]);
+            });
             
-            var_dump($ingredients);
+            $quantitesNotNull = array_filter($quantites, function($quantite) {
+                return $quantite !== 0;
+            });
+            
+            // var_dump($ingredients);
 
             // Vérifier si la valeur est bien un entier
             if (!is_int($temps_preparation)) {
@@ -63,13 +74,14 @@
                 $temps_cuisson,
                 $difficulte,
                 $categorie_id,
-                $ingredients,
-                $quantites 
+                $ingredientsWithQuantite,
+                $quantitesNotNull 
             );
             var_dump($recette);
+            var_dump(array_values($quantitesNotNull));
 
             // Ajouter la recette à la base de données
-            $recetteDAO->addRecette($recette, $quantite);
+            $recetteDAO->addRecette($recette, $quantites);
 
             echo '<p>Recette ajoutée avec succès!</p>';
         } catch (Exception $e) {
@@ -122,13 +134,13 @@
                 echo '<div>';
                 echo '<input type="checkbox" name="ingredients[]" value="' . $ingredient->getIngredientId() . '">';
                 echo '<label>' . $ingredient->getNomIngredient() . '</label>';
+                echo '<input type="number" name="quantite[' . $ingredient->getIngredientId() . ']" placeholder="Quantité">';
                 echo '</div>';
-                // var_dump($ingredient->getIngredientId());
             }
-            
+    
         ?>
         <input type="submit" value="Ajouter la recette">
-        
     </form>
+
 </body>
 </html>
