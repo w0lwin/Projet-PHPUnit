@@ -35,9 +35,13 @@
             $temps_cuisson = isset($_POST['temps_cuisson']) ? (int)$_POST['temps_cuisson'] : null;
             $difficulte = isset($_POST['difficulte']) ? (int)$_POST['difficulte'] : null;
             $categorie_id = isset($_POST['categorie_id']) ? (int)$_POST['categorie_id'] : null;
-            $ingredients = isset($_POST['ingredients']) ? (int)$_POST['ingredients'] : null;
-            $quantites = $_POST['quantite']; 
+            $ingredientsStrings = isset($_POST['ingredients']) ? $_POST['ingredients'] : null;
+            $quantites = $_POST['quantite'];
+
+            // Convertir les chaînes d'ingrédients en entiers
+            $ingredients = array_map('intval', $ingredientsStrings);
             
+            var_dump($ingredients);
 
             // Vérifier si la valeur est bien un entier
             if (!is_int($temps_preparation)) {
@@ -60,7 +64,7 @@
                 $difficulte,
                 $categorie_id,
                 $ingredients,
-                $quantites // Ajouter le tableau des quantités
+                $quantites 
             );
             var_dump($recette);
 
@@ -110,7 +114,7 @@
             require_once '../ingredient/IngredientDAO.php';
 
             // Créer une instance de IngredientDAO
-            $ingredientDAO = new IngredientDAO($bdd);
+            $ingredientDAO = new IngredientDAO($bdd);   
 
             $ingredients = $ingredientDAO->getIngredients();
 
@@ -119,7 +123,9 @@
                 echo '<input type="checkbox" name="ingredients[]" value="' . $ingredient->getIngredientId() . '">';
                 echo '<label>' . $ingredient->getNomIngredient() . '</label>';
                 echo '</div>';
+                // var_dump($ingredient->getIngredientId());
             }
+            
         ?>
         <input type="submit" value="Ajouter la recette">
         
