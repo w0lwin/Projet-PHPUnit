@@ -21,7 +21,6 @@ function getRecette($recetteDAO, $ingredientDAO)
     }
 }
 
-// Dans updateRecette.php
 function update($recetteDAO, $ingredientDAO, $existingRecette)
 {
     if (isset($_POST['submit'])) {
@@ -32,43 +31,40 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
         $instructions = $_POST['instructions'];
         $tempsPreparation = $_POST['tempsPreparation'];
         $tempsCuisson = $_POST['tempsCuisson'];
-        $noms = $_POST['noms'];
-        $quantites = $_POST['quantites'];
+        $noms = isset($_POST['noms']) ? $_POST['noms'] : [];
+        $quantites = isset($_POST['quantites']) ? $_POST['quantites'] : [];
 
         $tempsPreparation = intval($_POST['tempsPreparation']);
         $tempsCuisson = intval($_POST['tempsCuisson']);
         $difficulte = intval($_POST['difficulte']);
-        var_dump($noms); // Vérifiez si les données sont correctement récupérées
-        var_dump($quantites);
+        $quantites = array_map('intval', $quantites);
 
-        // Vérifiez si le nombre d'ingrédients, de quantités et d'unités est le même
-        if (count($noms) === count($quantites)) {
-            $ingredientsRecette = [];
-            for ($i = 0; $i < count($noms); $i++) {
-                // Utilisez la nouvelle fonction pour obtenir l'objet Ingredient
-                $ingredientId = $ingredientDAO->getIdByNomIngredient($noms[$i]);
-                $quantite = intval($quantites[$i]);
+        // Récupérer les ingrédients actuels de la recette
+        $ingredients = $recetteDAO->getIngredientsRecette($id);
 
-                $ingredientsRecette[] = ['ingredient_id' => $ingredientId];
-            }
+        // Mettre à jour les propriétés modifiables
+        $existingRecette->setNomRecette($nomRecette);
+        $existingRecette->setDifficulte($difficulte);
+        $existingRecette->setInstruction($instructions);
+        $existingRecette->setTempsPreparation($tempsPreparation);
+        $existingRecette->setTempsCuisson($tempsCuisson);
 
-            // Mettre à jour les propriétés modifiables
-            $existingRecette->setNomRecette($nomRecette);
-            $existingRecette->setDifficulte($difficulte);
-            $existingRecette->setInstruction($instructions);
-            $existingRecette->setTempsPreparation($tempsPreparation);
-            $existingRecette->setTempsCuisson($tempsCuisson);
-            $existingRecette->setIngredients($ingredientsRecette);
+        $recetteDAO->updateRecette($existingRecette);
 
-            // Mettre à jour la recette dans la base de données
-            $recetteDAO->updateRecette($existingRecette, $quantite);
-
-            header('Location: ../index.php');
-        } else {
-            echo "Le nombre d'ingrédients ne correspond pas au nombre de quantités.";
+        // Mettre à jour les ingrédients
+        foreach ($ingredients as $ingredient) {
+            $ingredientId = $ingredient['id'];
+            $index = array_search($ingredientId, array_column($ingredients, 'id'));
+            $quantite = $quantites[$index];       
+            $recetteDAO->updateIngredientsRecette($id, $ingredientId, $quantite);
         }
+
+        // header('Location: /detailsRecette.php?id=' . $id);
     }
 }
+
+   
+
 
 
 
@@ -93,7 +89,6 @@ function sanitizeInput($input)
 <body>
     <?php
     $recette = getRecette($recetteDAO, $ingredientDAO);
-
     if (!empty($recette)) :
         // Récupérer les ingrédients de la recette
         $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
@@ -124,18 +119,20 @@ function sanitizeInput($input)
                     $getIngredient = $ingredientDAO->getIngredientsById($id);
                     ?>
                     <li>
-                        <label for="nom_<?php echo $id; ?>">Nom:</label>
-                        <input type="text" name="noms[]" id="nom_<?php echo $id; ?>" value="<?php echo sanitizeInput($getIngredient->getNomIngredient()); ?>" required>
+                        <p><?php echo $getIngredient->getNomIngredient(); ?></p>
 
                         <label for="quantite_<?php echo $id; ?>">Quantité:</label>
-                        <input type="text" name="quantites[]" id="quantite_<?php echo $id; ?>" value="<?php echo intval($ingredient['quantite']); ?>" required>
+                        <input type="text" name="quantites[]" id="quantite_<?php echo $id; ?>" value="<?php echo isset($ingredient['quantite']) ? intval($ingredient['quantite']) : ''; ?>" required>
                     </li>
                 <?php endforeach; ?>
             </ul>
 
             <input type="submit" name="submit" value="Valider les modifications">
         </form>
-        <?php update($recetteDAO, $ingredientDAO, $recette); ?>
+        <?php 
+            update($recetteDAO, $ingredientDAO, $recette); 
+            
+        ?>
     <?php else : ?>
         <p>Aucune recette trouvée.</p>
     <?php endif; ?>
