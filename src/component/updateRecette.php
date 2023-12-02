@@ -33,6 +33,7 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
         $tempsCuisson = $_POST['tempsCuisson'];
         $noms = isset($_POST['noms']) ? $_POST['noms'] : [];
         $quantites = isset($_POST['quantites']) ? $_POST['quantites'] : [];
+        $deleteIngredients = isset($_POST['delete_ingredients']) ? $_POST['delete_ingredients'] : [];
 
         $tempsPreparation = intval($_POST['tempsPreparation']);
         $tempsCuisson = intval($_POST['tempsCuisson']);
@@ -42,31 +43,43 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
         // Récupérer les ingrédients actuels de la recette
         $ingredients = $recetteDAO->getIngredientsRecette($id);
 
-        // Mettre à jour les propriétés modifiables
-        $existingRecette->setNomRecette($nomRecette);
-        $existingRecette->setDifficulte($difficulte);
-        $existingRecette->setInstruction($instructions);
-        $existingRecette->setTempsPreparation($tempsPreparation);
-        $existingRecette->setTempsCuisson($tempsCuisson);
+        
+            // Mettre à jour les propriétés modifiables
+            $existingRecette->setNomRecette($nomRecette);
+            $existingRecette->setDifficulte($difficulte);
+            $existingRecette->setInstruction($instructions);
+            $existingRecette->setTempsPreparation($tempsPreparation);
+            $existingRecette->setTempsCuisson($tempsCuisson);
 
-        $recetteDAO->updateRecette($existingRecette);
-
-        // Mettre à jour les ingrédients
-        foreach ($ingredients as $ingredient) {
-            $ingredientId = $ingredient['id'];
-            $index = array_search($ingredientId, array_column($ingredients, 'id'));
-            $quantite = $quantites[$index];       
-            $recetteDAO->updateIngredientsRecette($id, $ingredientId, $quantite);
+            $recetteDAO->updateRecette($existingRecette);
+        if ($quantites > 0) {
+            // Mettre à jour les ingrédients
+            foreach ($ingredients as $ingredient) {
+                $ingredientId = $ingredient['id'];
+                $index = array_search($ingredientId, array_column($ingredients, 'id'));
+                $quantite = $quantites[$index];
+                $recetteDAO->updateIngredientsRecette($id, $ingredientId, $quantite);
+            }
         }
+
+            // Vérifier s'il reste au moins un ingrédient après la suppression
+        if (count($ingredients) - count($deleteIngredients) > 0) {
+            // Supprimer les ingrédients marqués pour suppression
+            foreach ($deleteIngredients as $ingredientIdToDelete => $deleteFlag) {
+                if ($deleteFlag == '1') {
+                    // Supprimer l'ingrédient seulement s'il reste au moins un ingrédient après la suppression
+                    if (count($ingredients) - 1 > 0) {
+                        $recetteDAO->deleteIngredientRecette($id, $ingredientIdToDelete);
+                    } else {
+                        echo "La recette doit avoir au moins un ingrédient.";
+                    }
+                }
+            }
+        } 
 
         // header('Location: /detailsRecette.php?id=' . $id);
     }
 }
-
-   
-
-
-
 
 function sanitizeInput($input)
 {
@@ -123,16 +136,30 @@ function sanitizeInput($input)
 
                         <label for="quantite_<?php echo $id; ?>">Quantité:</label>
                         <input type="text" name="quantites[]" id="quantite_<?php echo $id; ?>" value="<?php echo isset($ingredient['quantite']) ? intval($ingredient['quantite']) : ''; ?>" required>
+
+                        <!-- Champ caché pour marquer l'ingrédient pour suppression -->
+                        <input type="hidden" name="delete_ingredients[<?php echo $id; ?>]" id="delete_ingredient_<?php echo $id; ?>" value="0">
+
+                        <input type="checkbox" name="delete_ingredients[]" value="<?php echo $id; ?>"> Supprimer cet ingrédient
+
                     </li>
                 <?php endforeach; ?>
             </ul>
 
             <input type="submit" name="submit" value="Valider les modifications">
         </form>
+
         <?php 
             update($recetteDAO, $ingredientDAO, $recette); 
-            
         ?>
+        <!-- Script JavaScript pour la suppression côté client -->
+        <script>
+            function deleteIngredient(ingredientId) {
+                // Marquer l'ingrédient pour la suppression
+                document.getElementById('delete_ingredient_' + ingredientId).value = '1';
+            }
+        </script>
+
     <?php else : ?>
         <p>Aucune recette trouvée.</p>
     <?php endif; ?>

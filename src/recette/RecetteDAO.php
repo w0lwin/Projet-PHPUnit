@@ -268,7 +268,23 @@ class RecetteDAO{
         $stmt2->bindParam(':id', $id);
         $stmt2->execute();
     }
+
+    public function deleteIngredientRecette($recetteId, $ingredientId)
+    {
+        if ($recetteId == null || $ingredientId == null){
+            throw new InvalidArgumentException('recetteId and ingredientId should not be null');
+        }
+
+        if (!is_int($recetteId) || !is_int($ingredientId)) {
+            throw new InvalidArgumentException('recetteId and ingredientId should be integers');
+        }
+        
+        $stmt = $this->pdo->prepare("DELETE FROM recette_ingredients WHERE recette_id = :recette_id AND ingredient_id = :ingredient_id");
+        $stmt->bindParam(':recette_id', $recetteId);
+        $stmt->bindParam(':ingredient_id', $ingredientId);
+        $stmt->execute();
+}
 }
 
-
 ?>
+
