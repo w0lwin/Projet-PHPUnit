@@ -28,6 +28,7 @@ details();
 <head>
     <meta charset="UTF-8">
     <title>Details recette</title>
+    <link rel="stylesheet" href="../../Css/index.css">
 </head>
 <body>
     <p>Details recette</p>

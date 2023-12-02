@@ -28,8 +28,14 @@ $recettes = shearch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>shearchBar</title>
+    <link rel="stylesheet" href="../../Css/index.css">
 </head>
 <body>
+    <header>
+        <a href="../../index.php">Home</a>
+        <a href="ajout.php">ajout</a>
+        <a href="displayRecette.php">recette</a>
+    </header>
     <div>
         <p>Rechercher une recette</p>
         <form action="" method="post">
