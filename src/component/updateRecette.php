@@ -23,39 +23,6 @@ function getRecette($recetteDAO, $ingredientDAO)
 
 function update($recetteDAO, $ingredientDAO, $existingRecette)
 {
-    if (isset($_POST['ajouterIngredient'])) {
-        $nouvelIngredient = sanitizeInput($_POST['nouvelIngredient']);
-        $quantiteNouvelIngredient = intval($_POST['quantiteNouvelIngredient']);
-
-        //convertit en int
-        $quantiteNouvelIngredient = intval($quantiteNouvelIngredient);
-
-
-        //Créer un objet ingrédient avec le nom 
-        $ingredient = new Ingredient(null, $nouvelIngredient, 'g');
-
-        // Vérifier si l'ingrédient existe déjà
-        $existingIngredient = $ingredientDAO->getIdByNomIngredient($nouvelIngredient);
-
-        if (!$existingIngredient) {
-            // L'ingrédient n'existe pas encore, ajouter-le à la base de données
-            $ingredientId = $ingredientDAO->addIngredient($ingredient);
-            $ingredientId = intval($ingredientId);
-
-            echo "L'ingrédient a été ajouté à la base de données";
-            
-            // Ajouter l'ingrédient à la recette
-            $recetteDAO->addIngredientRecette($existingRecette->getId(), $ingredientId, $quantiteNouvelIngredient);
-
-            // Rediriger vers la même page après l'ajout
-            header('Location: updateRecette.php?id=' . $existingRecette->getId());
-        } else {
-            // L'ingrédient existe déjà, ajouter simplement la quantité
-            $recetteDAO->updateIngredientRecette($existingRecette->getId(), $existingIngredient, $quantiteNouvelIngredient);
-            // Rediriger vers la même page après l'ajout
-            header('Location: updateRecette.php?id=' . $existingRecette->getId());
-        }}
-
     if (isset($_POST['submit'])) {
         $id = $_GET['id'];
         $id = intval($id);
@@ -95,6 +62,8 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
             }
         }
 
+            // Vérifier s'il reste au moins un ingrédient après la suppression
+        if (count($ingredients) - count($deleteIngredients) > 0) {
             // Supprimer les ingrédients marqués pour suppression
             foreach ($deleteIngredients as $ingredientIdToDelete => $deleteFlag) {
                 if ($deleteFlag == '1') {
@@ -105,7 +74,7 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
                         echo "La recette doit avoir au moins un ingrédient.";
                     }
                 }
-            
+            }
         } 
 
         // header('Location: /detailsRecette.php?id=' . $id);
@@ -178,18 +147,6 @@ function sanitizeInput($input)
             </ul>
 
             <input type="submit" name="submit" value="Valider les modifications">
-        </form>
-
-                <!-- Ajout du formulaire d'ajout d'ingrédients -->
-        <form action="updateRecette.php?id=<?php echo $recette->getId(); ?>" method="post">
-            <h3>Ajouter un nouvel ingrédient :</h3>
-            <label for="nouvelIngredient">Nom de l'ingrédient :</label>
-            <input type="text" id="nouvelIngredient" name="nouvelIngredient" required>
-
-            <label for="quantiteNouvelIngredient">Quantité :</label>
-            <input type="text" id="quantiteNouvelIngredient" name="quantiteNouvelIngredient" required>
-
-            <input type="submit" name="ajouterIngredient" value="Ajouter">
         </form>
 
         <?php 

@@ -78,8 +78,6 @@ class IngredientDAO{
         $stmt->bindParam(':nom_ingredient', $nom_ingredient);
         $stmt->bindParam(':unite_mesure', $unite_mesure);
         $stmt->execute();
-
-        return $this->db->lastInsertId();
     }
 
     public function updateIngredient(Ingredient $ingredient){
@@ -153,14 +151,12 @@ class IngredientDAO{
         $stmt->bindParam(':nom_ingredient', $nom_ingredient);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (array_key_exists('id', $result)) {
-            return $result['id'];
-        } else {
-            return null;
+
+        if (!$result) {
+            throw new Exception('Aucun ingrédient trouvé avec ce nom'); 
         }
 
-        
+        return $result['ingredient_id'];
     }
 
 
