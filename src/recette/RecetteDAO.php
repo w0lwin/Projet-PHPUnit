@@ -182,7 +182,7 @@ class RecetteDAO{
         $recetteId = $this->pdo->lastInsertId();
     
         foreach ($ingredients as $ingredient) {
-            $ingredientId = $ingredient->getIngredientId(); 
+            $ingredientId = $ingredient->getIngredientId();
             $index = array_search($ingredientId, array_column($ingredients, 'id'));
             $ingredientQuantite = $quantite[$index];
         

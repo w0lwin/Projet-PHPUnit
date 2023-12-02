@@ -36,7 +36,7 @@
             $difficulte = isset($_POST['difficulte']) ? (int)$_POST['difficulte'] : null;
             $categorie_id = isset($_POST['categorie_id']) ? (int)$_POST['categorie_id'] : null;
             $ingredients = isset($_POST['ingredients']) ? (int)$_POST['ingredients'] : null;
-            $quantites = $_POST['quantite']; // Nouveau tableau pour stocker les quantités
+            $quantites = $_POST['quantite']; 
             
 
             // Vérifier si la valeur est bien un entier
