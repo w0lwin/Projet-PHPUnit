@@ -30,10 +30,12 @@
             if (!empty($recettes)) {
                 foreach ($recettes as $recette) {
                     echo '<div class="recette">';
+                    echo '<a class="redirection" href="detailsRecette.php?id=' . $recette->getId() . '">';
                     echo '<h2>' . $recette->getNomRecette() . '</h2>';
                     echo '<div class="image-recette"><img src="https://assets.afcdn.com/recipe/20160405/45730_w190h190c1cx1000cy1500.webp" alt="image"></div>';
+                    echo '</a>';
                     echo '<div class="info-recette">';
-                    echo '<p><strong>Temps de préparation:</strong><br> ' .  $recette->getTempsCuisson() . ' minutes</p>';
+                    echo '<p><strong>Temps de préparation:</strong><br> ' . $recette->getTempsCuisson() . 'minutes</p>';
                     echo '<p><strong>Difficulté:</strong><br> ' . $recette->getDifficulte() . '</p>';
                     echo '</div>';
                     echo '</div>';
@@ -42,6 +44,7 @@
                 echo '<p>Aucune recette trouvée.</p>';
             }
         ?>
+
     </div>
 </body>
 </html>

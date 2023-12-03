@@ -9,8 +9,8 @@
 <body>
     <header>
         <a href="../../index.php">Home</a>
-        <a href="recherche.php">ajout</a>
-        <a href="recette.php">recette</a>
+        <a href="shearchBar.php">recherche</a>
+        <a href="displayRecette.php">recette</a>
     </header>
     <h1>Ajouter une recette</h1>
 
@@ -26,7 +26,7 @@
     $categories = $categorieDAO->getAllCategories();
 
     // Assurez-vous que $categories contient des données
-    var_dump($categories);
+    // var_dump($categories);
 
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -114,56 +114,61 @@
     }
     ?>
 
-    <form method="post" action="">
-        <!-- Ajoutez les champs du formulaire nécessaires ici -->
-        <!-- Exemple : -->
-        <label for="nom_recette">Nom de la recette:</label>
-        <input type="text" name="nom_recette" required>
-        
-        <label for="instruction">Instructions:</label>
-        <textarea name="instruction" required></textarea>
-        
-        <label for="temps_preparation">Temps de préparation (en minutes):</label>
-        <input type="number" name="temps_preparation" required>
-        
-        <label for="temps_cuisson">Temps de cuisson (en minutes):</label>
-        <input type="number" name="temps_cuisson" required>
-        
-        <label for="difficulte">Difficulté:</label>
-        <select name="difficulte" required>
-            <option value="1">Facile</option>
-            <option value="2">Moyenne</option>
-            <option value="3">Difficile</option>
-        </select>
-        
-        <label for="categorie_id">Catégorie:</label>
-        <select name="categorie_id" required>
-            <?php foreach ($categories as $categorie): ?>
-                <option value="<?php echo $categorie->getCategorieId(); ?>"><?php echo $categorie->getNomCategorie(); ?></option>
-            <?php endforeach; ?>
-        </select>
+    <div class="formulaire">
+        <form method="post" action="">
+            <div class="input-recette">
+                <label for="nom_recette">Nom de la recette:</label>
+                <input type="text" name="nom_recette" required>
 
-        
-        <label for="ingredients">Ingrédients:</label>
-        <?php
-            require_once '../ingredient/IngredientDAO.php';
+                <label for="instruction">Instructions:</label>
+                <textarea name="instruction" required></textarea>
 
-            // Créer une instance de IngredientDAO
-            $ingredientDAO = new IngredientDAO($bdd);   
+                <label for="temps_preparation">Temps de préparation (en minutes):</label>
+                <input type="number" name="temps_preparation" required>
 
-            $ingredients = $ingredientDAO->getIngredients();
+                <label for="temps_cuisson">Temps de cuisson (en minutes):</label>
+                <input type="number" name="temps_cuisson" required>
 
-            foreach ($ingredients as $ingredient) {
-                echo '<div>';
-                echo '<input type="checkbox" name="ingredients[]" value="' . $ingredient->getIngredientId() . '">';
-                echo '<label>' . $ingredient->getNomIngredient() . '</label>';
-                echo '<input type="number" name="quantite[' . $ingredient->getIngredientId() . ']" placeholder="Quantité">';
-                echo '</div>';
-            }
-        ?>
-        <input type="submit" value="Ajouter la recette">
+                <label for="difficulte">Difficulté:</label>
+                <select name="difficulte" required>
+                    <option value="1">Facile</option>
+                    <option value="2">Moyenne</option>
+                    <option value="3">Difficile</option>
+                </select>
 
-    </form>
+                <label for="categorie_id">Catégorie:</label>
+                <select name="categorie_id" required>
+                    <?php foreach ($categories as $categorie): ?>
+                        <option value="<?php echo $categorie->getCategorieId(); ?>"><?php echo      $categorie->getNomCategorie(); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+                
+            <div class="input-ingredients">
+                <h3>Choississez les ingredients necessaire pour votre recette : <br></h3>
+                <label for="ingredients"><br>Ingrédients:</label>
+                <?php
+                    require_once '../ingredient/IngredientDAO.php';
+
+                    // Créer une instance de IngredientDAO
+                    $ingredientDAO = new IngredientDAO($bdd);   
+
+                    $ingredients = $ingredientDAO->getIngredients();
+
+                    foreach ($ingredients as $ingredient) {
+                        echo '<div>';
+                        echo '<input type="checkbox" name="ingredients[]" value="' .        $ingredient->getIngredientId() . '">';
+                        echo '<label>' . $ingredient->getNomIngredient() . '</label>';
+                        echo '<input type="number" name="quantite[' . $ingredient->getIngredientId() .  ']"  placeholder="Quantité">';
+                        echo '</div>';
+                    }
+                ?>
+            </div>
+            <input type="submit" value="Ajouter la recette" class="submit-recette">
+
+        </form>
+    </div>
 
 </body>
 </html>
