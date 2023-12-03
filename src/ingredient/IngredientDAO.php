@@ -1,6 +1,6 @@
 <?php
 require_once('Ingredient.php');
-require_once '../config.php';
+// require_once '../config.php';
 
 
 class IngredientDAO{
@@ -69,7 +69,7 @@ class IngredientDAO{
             }
         }
 
-        if(!is_string($nom_ingredient)){
+        if(!is_string($nom_ingredient) || !is_string($unite_mesure)){
             throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
         }
 
@@ -107,12 +107,12 @@ class IngredientDAO{
             throw new Exception('L\'unité de mesure n\'est pas valide');
         }
 
-        foreach($this->getIngredients() as $ingredient){
-            if($ingredient->getNomIngredient() == $nom_ingredient){
+        foreach ($this->ingredientDAO->getIngredients() as $existingIngredient) {
+            if ($existingIngredient->getNomIngredient() == $nom_ingredient) {
                 throw new Exception('L\'ingrédient existe déjà');
             }
         }
-
+        
         if(!is_string($nom_ingredient)){
             throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
         }
