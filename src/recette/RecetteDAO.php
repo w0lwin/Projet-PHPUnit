@@ -164,7 +164,7 @@ class RecetteDAO{
         $categorie_id = $recette->getCategorieId();
         $ingredients = $recette->getIngredients();
         
-        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
+        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
             throw new InvalidArgumentException('instruction, temps_preparation, temps_cuisson, difficulte, categorie_id, nom_recette, ingredients should not be null');
         }
     
