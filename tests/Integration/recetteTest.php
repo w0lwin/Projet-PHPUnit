@@ -117,9 +117,9 @@ class RecetteTest extends TestCase
     }
 
     /**
-     * @dataProvider getRecetteByTitleProvider
+     * @dataProvider searchRecettesProvider
      */
-    public function testGetRecetteByTitle($recettes)
+    public function testSearchRecettes($recettes)
     {
         foreach ($recettes as $recette) {
             $this->recetteDAO->addRecette($recette);
@@ -142,7 +142,7 @@ class RecetteTest extends TestCase
         }
 
         // Compter le nombre de recettes dans la base de données
-        $this->assertEquals(1, count($this->recetteDAO->getRecetteByTitle($recetteTitle)));
+        $this->assertEquals(1, count($this->recetteDAO->searchRecettes($recetteTitle)));
     }
 
     /**
@@ -358,7 +358,7 @@ class RecetteTest extends TestCase
             ];
         }
 
-        public static function getRecetteByTitleProvider()
+        public static function searchRecettesProvider()
         {
             return [
                 [
