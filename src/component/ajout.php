@@ -9,8 +9,8 @@
 <body>
     <header>
         <a href="../../index.php">Home</a>
-        <a href="recherche.php">recherche</a>
-        <a href="recette.php">recette</a>
+        <a href="shearchBar.php">recherche</a>
+        <a href="displayRecette.php">recette</a>
     </header>
     <h1>Ajouter une recette</h1>
 
