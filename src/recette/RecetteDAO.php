@@ -44,23 +44,34 @@ class RecetteDAO{
     }
     
 
-    public function getRecetteByTitle($nom_recette){
-        if ($nom_recette == null){
-            throw new InvalidArgumentException('nom_recette should not be null');
+    public function searchRecettes($searchTerm) {
+        if ($searchTerm == null){
+            throw new InvalidArgumentException('searchTerm should not be null');
         }
     
-        if (!is_string($nom_recette)){
-            throw new InvalidArgumentException('nom_recette should be a string');
+        if (!is_string($searchTerm)){
+            throw new InvalidArgumentException('searchTerm should be a string');
         }
     
-        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette LIKE :nom_recette");
-        $stmt->execute(['nom_recette' => "%$nom_recette%"]);
+        $stmt = $this->pdo->prepare("SELECT DISTINCT r.*
+        FROM recettes r
+        LEFT JOIN recette_ingredients ri ON r.id = ri.recette_id
+        LEFT JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
+        LEFT JOIN categories c ON r.categories_id = c.categorie_id
+        WHERE r.nom_recette LIKE :searchTerm 
+           OR c.nom_categorie LIKE :searchTerm
+           OR i.nom_ingredient LIKE :searchTerm");
+
+        $searchTermWithWildcard = "%$searchTerm%";
+        $stmt->execute(['searchTerm' => $searchTermWithWildcard]);
+
+ 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
         $recettes = [];
         foreach ($results as $result) {
             $id = intval($result['id']);
-
+    
             $ingredients = $this->getIngredientsRecette($id);
             $ingredientIds = [];
             foreach ($ingredients as $ingredient) {
@@ -77,12 +88,14 @@ class RecetteDAO{
                 $result['categories_id'],
                 $ingredientIds
             );
-            
+    
             array_push($recettes, $recette);
         }
     
         return $recettes;
     }
+    
+    
     public function getRecettes()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");
