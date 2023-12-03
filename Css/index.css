@@ -6,6 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
+    background-color: #eaeaea;
 }
 
 header {
@@ -16,24 +17,26 @@ header {
     justify-content: space-around;
     align-items: center;
     padding: 0 8em;
+    box-shadow: 2px 4px 18px 5px rgba(0, 0, 0, 0.242);
+    background-color: rgba(0, 0, 0, 0.104);
 }
 
-a{
+header a{
     text-decoration: none;
-    color: black;
+    color: rgb(0, 0, 0);
     font-size: 22px;
     font-weight: bold;
     transition: all 0.5s ease-in-out;
 }
 
-a:hover {
+header a:hover {
     transform: scale(1.1);
 }
 
 .container {
     /* border: 1px solid red; */
     height: auto;
-    width: 95.5%;
+    width: 97%;
     display: flex;
     flex-wrap: wrap;
     /* justify-content: center; */
@@ -51,6 +54,7 @@ a:hover {
     justify-content: center;
     text-align: center;
     border-radius: 20px;
+    border: 1.5px solid black;
 }
 
 .info-recette{
@@ -75,4 +79,94 @@ a:hover {
     height: 100%;
     object-fit: cover; 
     display: block; 
+}
+
+
+/*CSS SHEARCH BAR**********************************************************/
+
+.shearch {
+    /* background-color: red; */
+    width: 60em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.list {
+    height: auto;
+    width: 95%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center;
+    /* background-color: blue; */
+    padding-left: 70px;
+}
+
+.ul-list{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.list ul li a p{
+    margin: 0;
+}
+
+.list ul li a{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+
+
+
+.li-list{
+    background-color: rgb(214, 214, 235);
+    width: 15em;
+    height: 19em;
+    border-radius: 10px;
+    margin: 15px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.shearch-image-recette{
+    width: 200px;
+    height: 200px;
+    overflow: hidden; 
+    position: relative;
+    margin: 15px 0;
+}
+
+.shearch-image-recette img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block; 
+    
+}
+
+.info-shearch-recette{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    text-align: start;
+}
+
+.info-shearch-recette p {
+    margin-right: 20px !important;
 }
