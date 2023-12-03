@@ -103,7 +103,7 @@ class ingredientTest extends TestCase{
         }
     
         // Appelle la méthode getIngredientById pour récupérer l'ingrédient par ID et compare le résultat avec la valeur attendue.
-        $this->assertEquals($expected, $this->ingredientDAO->getIngredientById($id));
+        $this->assertEquals($expected, $this->ingredientDAO->getIngredientsById($id));
      }
 
     /**
