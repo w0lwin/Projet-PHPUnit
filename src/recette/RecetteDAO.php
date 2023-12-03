@@ -145,7 +145,7 @@ class RecetteDAO{
     }
     
 
-    public function addRecette(Recette $recette,$quantite)
+    public function addRecette(Recette $recette)
     {   
         $nom_recette = $recette->getNomRecette();
         $instruction = $recette->getInstruction();
@@ -156,7 +156,7 @@ class RecetteDAO{
         $ingredients = $recette->getIngredients();
         
         if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
-            throw new InvalidArgumentException('nom_recette should not be null');
+            throw new InvalidArgumentException('instruction, temps_preparation, temps_cuisson, difficulte, categorie_id, nom_recette, ingredients should not be null');
         }
     
         if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
@@ -181,18 +181,7 @@ class RecetteDAO{
         // Obtenir l'ID de la recette insérée
         $recetteId = $this->pdo->lastInsertId();
     
-        foreach ($ingredients as $ingredient) {
-            $ingredientId = $ingredient->getIngredientId(); 
-            $index = array_search($ingredientId, array_column($ingredients, 'id'));
-            $ingredientQuantite = $quantite[$index];
-        
-        
-            $stmt2 = $this->pdo->prepare("INSERT INTO recette_ingredients (recette_id, ingredient_id, Quantite) VALUES (:recette_id, :ingredient_id, :quantite)");
-            $stmt2->bindParam(':recette_id', $recetteId);
-            $stmt2->bindParam(':ingredient_id', $ingredientId);
-            $stmt2->bindParam(':quantite', $ingredientQuantite);    
-            $stmt2->execute();
-        }
+        return $recetteId;
     }
     
     public function updateRecette(Recette $recette)
@@ -206,11 +195,11 @@ class RecetteDAO{
         $categorie_id = $recette->getCategorieId();
         $ingredients = $recette->getIngredients();
     
-        if ($id == null || $nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
+        if ($nom_recette == null || $instruction == null || $temps_preparation == null || $temps_cuisson == null || $difficulte == null || $categorie_id == null || $ingredients == null ){
             throw new InvalidArgumentException('id, nom_recette, instruction, temps_preparation, temps_cuisson, difficulte, categorie_id, and ingredients should not be null');
         }
     
-        if (!is_int($id) || !is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
+        if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
             throw new InvalidArgumentException('id, temps_preparation, temps_cuisson, and difficulte should be integers');
         }
 

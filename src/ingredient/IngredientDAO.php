@@ -140,6 +140,9 @@ class IngredientDAO{
         $stmt->bindParam(':ingredient_id', $ingredient_id);
         $stmt->execute();
     }
+    
+
+    
 
     public function getIdByNomIngredient($nomIngredient)
     {
