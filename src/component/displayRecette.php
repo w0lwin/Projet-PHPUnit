@@ -21,9 +21,14 @@
         <?php
             require_once('../config.php');
             require_once('../recette/RecetteDAO.php');
+            require_once('../categorie/CategorieDAO.php');
             global $bdd;
 
             $recetteDAO = new RecetteDAO($bdd);
+
+            $categorieDAO = new CategorieDAO($bdd);
+
+            $categories = $categorieDAO->getAllCategories();
 
             $recettes = $recetteDAO->getRecettes();
 
@@ -42,9 +47,12 @@
                 // Vérifiez si la catégorie existe dans le tableau, sinon utilisez une image par défaut
                 return isset($categoryImages[$categoryId]) ? $categoryImages[$categoryId] : 'default_image.jpg';
             }
+           
+            
 
             if (!empty($recettes)) {
                 foreach ($recettes as $recette) {
+                    
                     echo '<div class="recette">';
                     echo '<a class="redirection" href="detailsRecette.php?id=' . $recette->getId() . '">';
                     echo '<h2>' . $recette->getNomRecette() . '</h2>';
@@ -52,6 +60,8 @@
                     echo '<div class="image-recette"><img src="' . $imagePath . '" alt="image"></div>';
                     echo '</a>';
                     echo '<div class="info-recette">';
+                    $categorie = $categorieDAO->getCategorieById(intval($recette->getCategorieId()));
+                    echo '<p><strong>Catégorie:</strong><br> ' . $categorie->getNomCategorie() . '</p>';;
                     echo '<p><strong>Temps de préparation:</strong><br> ' . $recette->getTempsCuisson() . 'minutes</p>';
                     echo '<p><strong>Difficulté:</strong><br> ' . $recette->getDifficulte() . '</p>';
                     echo '</div>';
