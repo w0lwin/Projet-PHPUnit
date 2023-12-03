@@ -150,14 +150,15 @@ class IngredientDAO{
         // Fetch retourne un tableau associatif ou un booléen (false si aucune ligne n'est trouvée)
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
-        // Vérifier si $result est un tableau et contient la clé 'id'
-        if ($result && array_key_exists('id', $result)) {
-            return $result['id'];
+        // Vérifier si $result est un tableau et contient la clé 'ingredient_id'
+        if ($result && array_key_exists('ingredient_id', $result)) {
+            return $result['ingredient_id'];
         } else {
             // Retourner false ou null ou gérer de toute autre manière appropriée
             return false;
         }
     }
+    
     
 
 

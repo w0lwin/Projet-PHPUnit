@@ -35,8 +35,9 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
 
         // Vérifier si l'ingrédient existe déjà
         $existingIngredient = $ingredientDAO->getIdByNomIngredient($nouvelIngredient);
+        var_dump($nouvelIngredient);
 
-        if (!$existingIngredient) {
+        if ($existingIngredient === false) {
             // L'ingrédient n'existe pas encore, ajouter-le à la base de données
  
             $ingredientId = $ingredientDAO->addIngredient($ingredient);
@@ -61,7 +62,7 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
             header('Location: updateRecette.php?id=' . $existingRecette->getId());
         } else {
             // L'ingrédient existe déjà, ajouter simplement la quantité
-            $recetteDAO->updateIngredientRecette($existingRecette->getId(), $existingIngredient, $quantiteNouvelIngredient);
+            $recetteDAO->updateIngredientsRecette($existingRecette->getId(), $existingIngredient, $quantiteNouvelIngredient);
             // Rediriger vers la même page après l'ajout
             header('Location: updateRecette.php?id=' . $existingRecette->getId());
         }
