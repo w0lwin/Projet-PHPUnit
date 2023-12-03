@@ -31,6 +31,7 @@ $recettes = shearch();
     <link rel="stylesheet" href="../../Css/index.css">
 </head>
 <body>
+    
     <header>
         <a href="../../index.php">Home</a>
         <a href="ajout.php">ajout</a>
