@@ -27,6 +27,7 @@
 
             $recettes = $recetteDAO->getRecettes();
 
+            // fonction pour donner une image selon la categorie de la recette
             function getImageForCategory($categoryId) {
                 // Logique pour associer une image à l'aide d'un tableau associatif
             
