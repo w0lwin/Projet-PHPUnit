@@ -16,8 +16,17 @@
 
     <?php
     require_once '../recette/RecetteDAO.php';
+    require_once '../categorie/CategorieDAO.php';
     require_once '../config.php';
 
+    // Créez une instance de CategorieDAO avec votre connexion à la base de données
+    $categorieDAO = new CategorieDAO($bdd);
+
+    // Obtenez toutes les catégories
+    $categories = $categorieDAO->getAllCategories();
+
+    // Assurez-vous que $categories contient des données
+    var_dump($categories);
 
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,7 +61,6 @@
                 return $quantite !== 0;
             });
             
-            // var_dump($ingredients);
 
             // Vérifier si la valeur est bien un entier
             if (!is_int($temps_preparation)) {
@@ -77,8 +85,7 @@
                 $ingredientsWithQuantite,
                 $quantitesNotNull 
             );
-            var_dump($recette);
-            var_dump(array_values($quantitesNotNull));
+           
 
             // Ajouter la recette à la base de données
             $recetteID = $recetteDAO->addRecette($recette, $quantites);
@@ -93,14 +100,7 @@
                 if (isset($_POST['quantite'][$ingredientId])) {
                     // Récupérer la quantité associée à l'ingrédient
                     $quantite = intval($_POST['quantite'][$ingredientId]);
-                    echo "recetteId:";
-                    var_dump($recetteID);
-                    echo"<br>";
-                    echo "ingredientId:";
-                    var_dump($ingredientId);
-                    echo"<br>";
-                    echo "quantite:";
-                    var_dump($quantite);
+                    
                     // Ajouter l'ingrédient à la recette avec sa quantité
                     $recetteDAO->addIngredientRecette($recetteID, $ingredientId, $quantite);
                 }
@@ -137,11 +137,12 @@
         </select>
         
         <label for="categorie_id">Catégorie:</label>
-        <!-- Remplacez le champ de sélection par votre liste de catégories -->
         <select name="categorie_id" required>
-            <option value="1">Catégorie 1</option>
-            <option value="2">Catégorie 2</option>
+            <?php foreach ($categories as $categorie): ?>
+                <option value="<?php echo $categorie->getCategorieId(); ?>"><?php echo $categorie->getNomCategorie(); ?></option>
+            <?php endforeach; ?>
         </select>
+
         
         <label for="ingredients">Ingrédients:</label>
         <?php
