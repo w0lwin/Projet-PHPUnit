@@ -253,6 +253,7 @@ class RecetteDAO{
         $stmt->bindParam(':ingredient_id', $ingredientId);
         $stmt->execute();
     }
+    
     public function updateIngredientsRecette($recetteId, $ingredientId, $quantite)
     {
     
