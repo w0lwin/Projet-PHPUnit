@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class CategorieTest extends TestCase
 {
-    // Propriété pour stocker l'instance PDO et l'instance du DAO (Data Access Object) pour les catégories
+    // Propriété pour stocker l'instance PDO et l'instance du DAO pour les catégories
     private $pdo;
     private $categorieDAO;
 
@@ -163,10 +163,10 @@ class CategorieTest extends TestCase
 
 
     /**
-     * Fournit des jeux de données pour tester la méthode updateCategorie.
-     *
-     * Chaque jeu de données est constitué de deux objets Categorie : un à ajouter à la base de données et l'autre avec les modifications attendues.
-     */
+    * Fournit des jeux de données pour tester les methodes
+    *
+    * Chaque jeu de données est constitué de deux objets Categorie : un à ajouter à la base de données et l'autre avec les modifications attendues.
+    */
 
     public static function ajouterCategorieProvider()
     {
