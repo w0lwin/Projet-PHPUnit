@@ -2,24 +2,25 @@
 require_once '../recette/RecetteDAO.php';
 require_once '../config.php';
 
-function shearch(){
+function search()
+{
     global $bdd;
 
     $recettes = []; // Initialisez $recettes ici
 
-    if (isset($_POST['shearchBar'])) {
+    if (isset($_POST['shearchBar']) && !empty($_POST['shearchBar'])) {
         $shearchBar = $_POST['shearchBar'];
 
         $recetteDAO = new RecetteDAO($bdd);
 
         // Récupérer les recettes trouvées
-        $recettes = $recetteDAO->getRecetteByTitle($shearchBar);
+        $recettes = $recetteDAO->searchRecettes($shearchBar);
     }
 
     return $recettes;
 }
 
-$recettes = shearch();
+$recettes = search();
 
 // fonction pour donner une image selon la categorie de la recette
 function getImageForCategory($categoryId) {
@@ -56,7 +57,7 @@ function getImageForCategory($categoryId) {
     <div>
         <p>Rechercher une recette</p>
         <form action="" method="post">
-            <input type="text" name="shearchBar" id="shearchBar">
+            <input type="text" name="shearchBar" id="shearchBar" required>
             <input type="submit" value="Rechercher">
         </form>
     </div>
@@ -84,8 +85,8 @@ function getImageForCategory($categoryId) {
                 </ul>
             </div>
         </div>
-    <?php else: ?>
-        <p>Aucune recette trouvée.</p>
+    <?php elseif (isset($_POST['shearchBar'])): ?>
+        <p>Aucune recette trouvée pour la recherche : <?php echo htmlspecialchars($_POST['shearchBar']); ?></p>
     <?php endif; ?>
 </body>
 </html>
