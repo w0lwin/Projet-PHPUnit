@@ -54,7 +54,7 @@ class RecetteTest extends TestCase
      public function testAddRecette($recette, $expected)
      {
         // Vérifie si les entrée sont null
-         if ($recette->getNomRecette() == null || $recette->getInstruction() == null || $recette->getTempsPreparation() == null || $recette->getTempsCuisson() == null || $recette->getDifficulte() == null || $recette->getCategorieId() == null || $recette->getIngredients() == null ) {
+         if ($recette->getNomRecette() == null || $recette->getInstruction() == null || $recette->getTempsPreparation() == null || $recette->getDifficulte() == null || $recette->getCategorieId() == null || $recette->getIngredients() == null || $recette->getTempsPreparation() < 0 || $recette->getTempsCuisson() < 0) {
              $this->expectException(Exception::class);
          }
 
