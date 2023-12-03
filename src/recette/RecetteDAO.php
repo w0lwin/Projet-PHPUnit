@@ -22,10 +22,6 @@ class RecetteDAO{
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
-        if ($result == null){
-            throw new InvalidArgumentException('no recette with id ' . $id . ' found');
-        }
-    
         $ingredients = $this->getIngredientsRecette($id);
         $ingredientIds = [];
     
@@ -159,8 +155,12 @@ class RecetteDAO{
             throw new InvalidArgumentException('instruction, temps_preparation, temps_cuisson, difficulte, categorie_id, nom_recette, ingredients should not be null');
         }
     
-        if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte)) {
+        if (!is_int($temps_preparation) || !is_int($temps_cuisson) || !is_int($difficulte) || !is_int($categorie_id)) {
             throw new InvalidArgumentException('temps_preparation, temps_cuisson, and difficulte should be integers');
+        }
+
+        if (!is_string($nom_recette) || !is_string($instruction)) {
+            throw new InvalidArgumentException('nom_recette and instruction should be strings');
         }
         
         foreach ($this->getRecettes() as $existingRecette) {
@@ -215,7 +215,7 @@ class RecetteDAO{
         $stmt->bindParam(':categorie_id', $categorie_id);
         $stmt->execute();
     
-        
+            
     }
 
 
