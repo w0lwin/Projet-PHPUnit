@@ -154,16 +154,16 @@ function sanitizeInput($input)
             <input type="text" id="nomRecette" name="nomRecette" value="<?php echo sanitizeInput($recette->getNomRecette()); ?>" required>
 
             <label for="difficulte">Difficulté :</label>
-            <input type="number" id="difficulte" name="difficulte" value="<?php echo sanitizeInput($recette->getDifficulte()); ?>" required>
+            <input type="text" id="difficulte" name="difficulte" value="<?php echo sanitizeInput($recette->getDifficulte()); ?>" required>
 
             <label for="instructions">Instructions :</label>
             <textarea name="instructions" id="instructions" cols="30" rows="10" required><?php echo sanitizeInput($recette->getInstruction()); ?></textarea>
 
             <label for="tempsPreparation">Temps de préparation :</label>
-            <input type="number" id="tempsPreparation" name="tempsPreparation" value="<?php echo sanitizeInput($recette->getTempsPreparation()); ?>" required>
+            <input type="text" id="tempsPreparation" name="tempsPreparation" value="<?php echo sanitizeInput($recette->getTempsPreparation()); ?>" required>
 
             <label for="tempsCuisson">Temps de cuisson :</label>
-            <input type="number" id="tempsCuisson" name="tempsCuisson" value="<?php echo sanitizeInput($recette->getTempsCuisson()); ?>" required>
+            <input type="text" id="tempsCuisson" name="tempsCuisson" value="<?php echo sanitizeInput($recette->getTempsCuisson()); ?>" required>
 
             <label for="ingredientsActuels">Ingrédients actuels :</label>
             <ul>
@@ -177,7 +177,7 @@ function sanitizeInput($input)
                         <p><?php echo $getIngredient->getNomIngredient(); ?></p>
 
                         <label for="quantite_<?php echo $id; ?>">Quantité:</label>
-                        <input type="number" name="quantites[]" id="quantite_<?php echo $id; ?>" value="<?php echo isset($ingredient['quantite']) ? intval($ingredient['quantite']) : ''; ?>" required>
+                        <input type="text" name="quantites[]" id="quantite_<?php echo $id; ?>" value="<?php echo isset($ingredient['quantite']) ? intval($ingredient['quantite']) : ''; ?>" required>
 
                         <!-- Champ caché pour marquer l'ingrédient pour suppression -->
                         <input type="hidden" name="delete_ingredients[<?php echo $id; ?>]" id="delete_ingredient_<?php echo $id; ?>" value="0">
@@ -204,20 +204,7 @@ function sanitizeInput($input)
         </form>
 
         <?php 
-        if (isset($_POST['submit'])) {
-        
-            if (
-                is_int($tempsPreparation)
-                && is_int($tempsCuisson)
-                && is_int($difficulte)
-            ) {
-                // Appeler la fonction update seulement si les 
-                update($recetteDAO, $ingredientDAO, $existingRecette);
-            } else {
-                echo "Veuillez entrer des valeurs numériques pour les champs requis.";
-            }
-        }
-        
+            update($recetteDAO, $ingredientDAO, $recette); 
         ?>
         <!-- Script JavaScript pour la suppression côté client -->
         <script>
