@@ -218,9 +218,6 @@ class RecetteDAO{
         
     }
 
-
-
-    
     
     public function deleteRecette($id)
     {

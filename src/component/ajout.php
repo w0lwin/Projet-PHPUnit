@@ -26,7 +26,7 @@
     $categories = $categorieDAO->getAllCategories();
 
     // Assurez-vous que $categories contient des données
-    var_dump($categories);
+    // var_dump($categories);
 
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
