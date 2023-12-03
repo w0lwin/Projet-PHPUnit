@@ -1,5 +1,5 @@
 <?php
-require_once '../config.php';
+// require_once '../config.php';
 require_once("Categorie.php");
 
 class CategorieDAO{
@@ -13,7 +13,7 @@ class CategorieDAO{
     public function ajouterCategorie(Categorie $categorie) {
         $nomCategorie = $categorie->getNomCategorie();
 
-        if(is_int($nomCategorie)){
+        if(!is_string($nomCategorie)){
             throw new Exception('string obligatoire');
         }
         if($nomCategorie == null){
@@ -41,63 +41,78 @@ class CategorieDAO{
         return $categories;
     }
 
-    public function getCategorieById($categorie_Id) {
-        $query = "SELECT * FROM categories WHERE categorie_id = :categorieId";
+    public function getCategorieById($id)
+    {
+        if($id == null){
+            throw new Exception('L\'id de la catégorie est obligatoire');
+        }
+
+        if(!is_int($id)){
+            throw new Exception('L\'id de la catégorie doit être un nombre');
+        }
+
+        if($id < 0){
+            throw new Exception('L\'id de la catégorie doit être un nombre positif');
+        }
+        $query = "SELECT * FROM categories WHERE categorie_id = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
-    
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-
-        if($categorie_Id == null){
-            throw new Exception('champs vide');
-        }
-        if(is_string($categorie_Id)){
-            throw new Exception('int obligatoire');
-        }
-        if($categorie_Id < 1){
-            throw new Exception('valeur negatif non autorise');
-        }
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        // var_dump($row);
-        if ($row) {
-            return new Categorie($row['categorie_id'], $row['nom_categorie']);
-        } else {
-            return null;
-        }
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    
+        return new Categorie($result['categorie_id'], $result['nom_categorie']);
     }
+    
     
 
     // UPDATE
     public function updateCategorie(Categorie $categorie) {
         $categorieId = $categorie->getCategorieId();
         $nouveauNom = $categorie->getNomCategorie();
-
+    
         if($categorieId == null || $nouveauNom == null){
             throw new Exception("champ vide");
         }
         if($categorieId < 1){
             throw new Exception("valeur negatif non autorisé");
         }
-
+    
         $query = "UPDATE categories SET nom_categorie = :nouveauNom WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':categorieId', $categorieId, PDO::PARAM_INT);
         $stmt->bindParam(':nouveauNom', $nouveauNom, PDO::PARAM_STR);
-        return $stmt->execute();
+        $stmt->execute();
+    
+        // Fetch the updated category from the database
+        $updatedCategory = $this->getCategorieById($categorieId);
+    
+        return $updatedCategory;
     }
+    
 
     // DELETE
     public function deleteCategorie($categorie_Id) {
-        $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
+       
 
         if($categorie_Id == null){
             throw new Exception('champs vide');
         }
 
+        if(!is_int($categorie_Id)){
+            throw new Exception('id doit etre un nombre');
+        }
+
+        if($categorie_Id < 0){
+            throw new Exception('id doit etre un nombre positif');
+        }
+
+        $query = "DELETE FROM categories WHERE categorie_id = :categorieId";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':categorieId', $categorie_Id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $stmt->execute();
+        return null;
     }
 
 
