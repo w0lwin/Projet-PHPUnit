@@ -53,12 +53,19 @@ class RecetteDAO{
             throw new InvalidArgumentException('searchTerm should be a string');
         }
     
-        $stmt = $this->pdo->prepare("SELECT * FROM recettes 
-                                    WHERE nom_recette LIKE :searchTerm 
-                                       OR categories_id IN (SELECT categories_id FROM categories WHERE nom_categorie LIKE :searchTerm)
-                                       OR id IN (SELECT recette_id FROM recette_ingredients 
-                                                 WHERE ingredient_id IN (SELECT ingredient_id FROM ingredients WHERE nom_ingredient LIKE :searchTerm))");
-        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
+        $stmt = $this->pdo->prepare("SELECT DISTINCT r.*
+        FROM recettes r
+        LEFT JOIN recette_ingredients ri ON r.id = ri.recette_id
+        LEFT JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
+        LEFT JOIN categories c ON r.categories_id = c.categorie_id
+        WHERE r.nom_recette LIKE :searchTerm 
+           OR c.nom_categorie LIKE :searchTerm
+           OR i.nom_ingredient LIKE :searchTerm");
+
+        $searchTermWithWildcard = "%$searchTerm%";
+        $stmt->execute(['searchTerm' => $searchTermWithWildcard]);
+
+ 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
         $recettes = [];
