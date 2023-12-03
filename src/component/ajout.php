@@ -61,6 +61,10 @@
                 return $quantite !== 0;
             });
             
+            // Vérifier si au moins un ingrédient est sélectionné avec une quantité
+            if (empty($ingredientsWithQuantite)) {
+                throw new InvalidArgumentException('Veuillez sélectionner au moins un ingrédient avec une quantité.');
+            }
 
             // Vérifier si la valeur est bien un entier
             if (!is_int($temps_preparation)) {
