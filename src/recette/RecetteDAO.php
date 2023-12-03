@@ -44,23 +44,27 @@ class RecetteDAO{
     }
     
 
-    public function getRecetteByTitle($nom_recette){
-        if ($nom_recette == null){
-            throw new InvalidArgumentException('nom_recette should not be null');
+    public function searchRecettes($searchTerm) {
+        if ($searchTerm == null){
+            throw new InvalidArgumentException('searchTerm should not be null');
         }
     
-        if (!is_string($nom_recette)){
-            throw new InvalidArgumentException('nom_recette should be a string');
+        if (!is_string($searchTerm)){
+            throw new InvalidArgumentException('searchTerm should be a string');
         }
     
-        $stmt = $this->pdo->prepare("SELECT * FROM recettes WHERE nom_recette LIKE :nom_recette");
-        $stmt->execute(['nom_recette' => "%$nom_recette%"]);
+        $stmt = $this->pdo->prepare("SELECT * FROM recettes 
+                                    WHERE nom_recette LIKE :searchTerm 
+                                       OR categories_id IN (SELECT categories_id FROM categories WHERE nom_categorie LIKE :searchTerm)
+                                       OR id IN (SELECT recette_id FROM recette_ingredients 
+                                                 WHERE ingredient_id IN (SELECT ingredient_id FROM ingredients WHERE nom_ingredient LIKE :searchTerm))");
+        $stmt->execute(['searchTerm' => "%$searchTerm%"]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
         $recettes = [];
         foreach ($results as $result) {
             $id = intval($result['id']);
-
+    
             $ingredients = $this->getIngredientsRecette($id);
             $ingredientIds = [];
             foreach ($ingredients as $ingredient) {
@@ -77,12 +81,14 @@ class RecetteDAO{
                 $result['categories_id'],
                 $ingredientIds
             );
-            
+    
             array_push($recettes, $recette);
         }
     
         return $recettes;
     }
+    
+    
     public function getRecettes()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM recettes");

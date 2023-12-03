@@ -2,24 +2,25 @@
 require_once '../recette/RecetteDAO.php';
 require_once '../config.php';
 
-function shearch(){
+function search()
+{
     global $bdd;
 
     $recettes = []; // Initialisez $recettes ici
 
-    if (isset($_POST['shearchBar'])) {
+    if (isset($_POST['shearchBar']) && !empty($_POST['shearchBar'])) {
         $shearchBar = $_POST['shearchBar'];
 
         $recetteDAO = new RecetteDAO($bdd);
 
         // Récupérer les recettes trouvées
-        $recettes = $recetteDAO->getRecetteByTitle($shearchBar);
+        $recettes = $recetteDAO->searchRecettes($shearchBar);
     }
 
     return $recettes;
 }
 
-$recettes = shearch();
+$recettes = search();
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +41,7 @@ $recettes = shearch();
     <div>
         <p>Rechercher une recette</p>
         <form action="" method="post">
-            <input type="text" name="shearchBar" id="shearchBar">
+            <input type="text" name="shearchBar" id="shearchBar" required>
             <input type="submit" value="Rechercher">
         </form>
     </div>
@@ -54,7 +55,7 @@ $recettes = shearch();
                     <?php foreach ($recettes as $recette): ?>
                         <li class="li-list">
                             <a href="detailsRecette.php?id=<?php echo $recette->getId(); ?>">
-                            <div class="shearch-image-recette"><img src="https://assets.afcdn.com/recipe/20160405/45730_w190h190c1cx1000cy1500.webp" alt="image"></div>
+                                <div class="shearch-image-recette"><img src="https://assets.afcdn.com/recipe/20160405/45730_w190h190c1cx1000cy1500.webp" alt="image"></div>
                                 <div class="info-shearch-recette">
                                     <p>Nom:<br> <?php echo $recette->getNomRecette(); ?></p>
                                     <p>Difficulté:<br> <?php echo $recette->getDifficulte(); ?></p>
@@ -65,8 +66,8 @@ $recettes = shearch();
                 </ul>
             </div>
         </div>
-    <?php else: ?>
-        <p>Aucune recette trouvée.</p>
+    <?php elseif (isset($_POST['shearchBar'])): ?>
+        <p>Aucune recette trouvée pour la recherche : <?php echo htmlspecialchars($_POST['shearchBar']); ?></p>
     <?php endif; ?>
 </body>
 </html>
