@@ -52,6 +52,8 @@ class IngredientDAO{
 
         $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
 
+
+
         if($nom_ingredient == null || $unite_mesure == null){
             throw new Exception('Le nom de l\'ingrédient et l\'unité de mesure sont obligatoires');
         }
@@ -76,6 +78,10 @@ class IngredientDAO{
         $stmt->bindParam(':nom_ingredient', $nom_ingredient);
         $stmt->bindParam(':unite_mesure', $unite_mesure);
         $stmt->execute();
+
+        $ingredient_id = $this->db->lastInsertId();
+
+        return $ingredient_id;
     }
 
     public function updateIngredient(Ingredient $ingredient){
@@ -134,6 +140,27 @@ class IngredientDAO{
         $stmt->bindParam(':ingredient_id', $ingredient_id);
         $stmt->execute();
     }
+
+    public function getIdByNomIngredient($nomIngredient)
+    {
+        $stmt = $this->db->prepare("SELECT ingredient_id FROM ingredients WHERE nom_ingredient = :nom_ingredient");
+        $stmt->bindParam(':nom_ingredient', $nomIngredient);
+        $stmt->execute();
+    
+        // Fetch retourne un tableau associatif ou un booléen (false si aucune ligne n'est trouvée)
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        // Vérifier si $result est un tableau et contient la clé 'ingredient_id'
+        if ($result && array_key_exists('ingredient_id', $result)) {
+            return $result['ingredient_id'];
+        } else {
+            // Retourner false ou null ou gérer de toute autre manière appropriée
+            return false;
+        }
+    }
+    
+    
+
 
 }
 

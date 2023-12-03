@@ -77,6 +77,10 @@ class Recette{
         $this->categorie_id = $categorie_id;
     }
 
+    public function setIngredients($ingredients){
+        $this->ingredients = $ingredients;
+    }
+
 }
 
 ?>
