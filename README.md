@@ -1,15 +1,4 @@
 # Projet-PHPUnit
 
-gestion de recette
-gestion des categories
-gestion des ingredients
-
-
-
-
-
-
-Faire la supretion des ingrédient
-L'ajout d'ingrédient
-Leur fonction correspondante dans le test
-Le dataProvider
+pour utiliser le framwork phpunit il faut installer composer avec la commande
+composer require --dev phpunit/phpunit
