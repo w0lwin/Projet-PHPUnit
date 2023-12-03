@@ -141,27 +141,7 @@ class IngredientDAO{
         $stmt->execute();
     }
     
-    public function getIdByNomIngredient($nom_ingredient) {
-        if ($nom_ingredient == null) {
-            throw new Exception('Le nom de l\'ingrédient est obligatoire');
-        }
-    
-        if (!is_string($nom_ingredient)) {
-            throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
-        }
-    
-        $sql = "SELECT ingredient_id FROM ingredients WHERE nom_ingredient = :nom_ingredient";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':nom_ingredient', $nom_ingredient);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        if (!$result) {
-            throw new Exception('Aucun ingrédient trouvé avec ce nom'); 
-        }
-    
-        return $result['ingredient_id'];
-    }
+
     
 
     public function getIdByNomIngredient($nomIngredient)

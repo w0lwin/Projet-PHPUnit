@@ -145,7 +145,7 @@ class RecetteDAO{
     }
     
 
-    public function addRecette(Recette $recette,$quantite)
+    public function addRecette(Recette $recette)
     {   
         $nom_recette = $recette->getNomRecette();
         $instruction = $recette->getInstruction();
@@ -181,18 +181,7 @@ class RecetteDAO{
         // Obtenir l'ID de la recette insérée
         $recetteId = $this->pdo->lastInsertId();
     
-        foreach ($ingredients as $ingredient) {
-            $ingredientId = $ingredient->getIngredientId();
-            $index = array_search($ingredientId, array_column($ingredients, 'id'));
-            $ingredientQuantite = $quantite[$index];
-        
-        
-            $stmt2 = $this->pdo->prepare("INSERT INTO recette_ingredients (recette_id, ingredient_id, Quantite) VALUES (:recette_id, :ingredient_id, :quantite)");
-            $stmt2->bindParam(':recette_id', $recetteId);
-            $stmt2->bindParam(':ingredient_id', $ingredientId);
-            $stmt2->bindParam(':quantite', $ingredientQuantite);    
-            $stmt2->execute();
-        }
+        return $recetteId;
     }
     
     public function updateRecette(Recette $recette)

@@ -81,7 +81,31 @@
             var_dump(array_values($quantitesNotNull));
 
             // Ajouter la recette à la base de données
-            $recetteDAO->addRecette($recette, $quantites);
+            $recetteID = $recetteDAO->addRecette($recette, $quantites);
+            $recetteID = intval($recetteID);
+
+            foreach ($ingredients as $ingredient) {
+                // Récupérer l'ID de l'ingrédient
+                $ingredientId = intval($ingredient);
+
+            
+                // Vérifier si la quantité correspondante existe dans le tableau des quantités
+                if (isset($_POST['quantite'][$ingredientId])) {
+                    // Récupérer la quantité associée à l'ingrédient
+                    $quantite = intval($_POST['quantite'][$ingredientId]);
+                    echo "recetteId:";
+                    var_dump($recetteID);
+                    echo"<br>";
+                    echo "ingredientId:";
+                    var_dump($ingredientId);
+                    echo"<br>";
+                    echo "quantite:";
+                    var_dump($quantite);
+                    // Ajouter l'ingrédient à la recette avec sa quantité
+                    $recetteDAO->addIngredientRecette($recetteID, $ingredientId, $quantite);
+                }
+            }
+            
 
             echo '<p>Recette ajoutée avec succès!</p>';
         } catch (Exception $e) {
@@ -135,9 +159,9 @@
                 echo '<input type="number" name="quantite[' . $ingredient->getIngredientId() . ']" placeholder="Quantité">';
                 echo '</div>';
             }
-    
         ?>
         <input type="submit" value="Ajouter la recette">
+
     </form>
 
 </body>
