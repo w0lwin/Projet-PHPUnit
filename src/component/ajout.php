@@ -25,8 +25,6 @@
     // Obtenez toutes les catégories
     $categories = $categorieDAO->getAllCategories();
 
-    // Assurez-vous que $categories contient des données
-    // var_dump($categories);
 
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,15 +50,24 @@
 
             $quantites = array_map('intval', $quantitesStrings);
 
-            // Filtrer les ingrédients et quantités pour exclure ceux sans quantité définie
-            $ingredientsWithQuantite = array_filter($ingredients, function($ingredientId) use ($quantites) {
-                return isset($quantites[$ingredientId]);
-            });
+
             
             $quantitesNotNull = array_filter($quantites, function($quantite) {
                 return $quantite !== 0;
             });
             
+            // Filtrer les ingrédients et quantités pour exclure ceux sans quantité définie
+            $ingredientsWithQuantite = array_filter($ingredients, function($ingredientId) use ($quantites) {
+                return isset($quantites[$ingredientId]) && $quantites[$ingredientId] !== 0;
+            });
+
+            // Vérifier si au moins un ingrédient est sélectionné avec une quantité
+            if (count($ingredientsWithQuantite) === 0) {
+                throw new InvalidArgumentException('Veuillez sélectionner au moins un ingrédient avec une quantité.');
+            }
+
+
+
 
             // Vérifier si la valeur est bien un entier
             if (!is_int($temps_preparation)) {

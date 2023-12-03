@@ -2,24 +2,41 @@
 require_once '../recette/RecetteDAO.php';
 require_once '../config.php';
 
-function shearch(){
+function search()
+{
     global $bdd;
 
     $recettes = []; // Initialisez $recettes ici
 
-    if (isset($_POST['shearchBar'])) {
+    if (isset($_POST['shearchBar']) && !empty($_POST['shearchBar'])) {
         $shearchBar = $_POST['shearchBar'];
 
         $recetteDAO = new RecetteDAO($bdd);
 
         // Récupérer les recettes trouvées
-        $recettes = $recetteDAO->getRecetteByTitle($shearchBar);
+        $recettes = $recetteDAO->searchRecettes($shearchBar);
     }
 
     return $recettes;
 }
 
-$recettes = shearch();
+$recettes = search();
+
+// fonction pour donner une image selon la categorie de la recette
+function getImageForCategory($categoryId) {
+    // Logique pour associer une image à l'aide d'un tableau associatif
+
+    $categoryImages = array(
+        2 => 'https://img.freepik.com/photos-gratuite/pates-penne-sauce-tomate-au-poulet-tomates-table-bois_2829-19744.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        3 => 'https://img.freepik.com/photos-gratuite/femme-mange-gateau-cacao-couches-creme-blanche-morceaux-chocolat_141793-2217.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        6 => 'https://img.freepik.com/photos-premium/antipasto-espagnol-classique-pintxos-tapas-aux-crevettes-camembert-saumon-jambon-dans-assiette-blanche-mise-au-point-selective_207126-4362.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        10 => 'https://img.freepik.com/photos-gratuite/serveur-met-pailles-plastique-dans-cocktail-sangria-dans-verre_140725-1476.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        12 => 'https://img.freepik.com/photos-gratuite/assiette-crevettes-garnie-epinards-farcis-pain-sauce-carottes-rapees_141793-2275.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+    );
+
+    // Vérifiez si la catégorie existe dans le tableau, sinon utilisez une image par défaut
+    return isset($categoryImages[$categoryId]) ? $categoryImages[$categoryId] : 'default_image.jpg';
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +57,7 @@ $recettes = shearch();
     <div>
         <p>Rechercher une recette</p>
         <form action="" method="post">
-            <input type="text" name="shearchBar" id="shearchBar">
+            <input type="text" name="shearchBar" id="shearchBar" required>
             <input type="submit" value="Rechercher">
         </form>
     </div>
@@ -54,7 +71,10 @@ $recettes = shearch();
                     <?php foreach ($recettes as $recette): ?>
                         <li class="li-list">
                             <a href="detailsRecette.php?id=<?php echo $recette->getId(); ?>">
-                            <div class="shearch-image-recette"><img src="https://assets.afcdn.com/recipe/20160405/45730_w190h190c1cx1000cy1500.webp" alt="image"></div>
+                            <?php
+                            $imagePath = getImageForCategory($recette->getCategorieId());
+                            ?>
+                            <div class="shearch-image-recette"><img src="<?php echo $imagePath; ?>" alt="image"></div>
                                 <div class="info-shearch-recette">
                                     <p>Nom:<br> <?php echo $recette->getNomRecette(); ?></p>
                                     <p>Difficulté:<br> <?php echo $recette->getDifficulte(); ?></p>
@@ -65,8 +85,8 @@ $recettes = shearch();
                 </ul>
             </div>
         </div>
-    <?php else: ?>
-        <p>Aucune recette trouvée.</p>
+    <?php elseif (isset($_POST['shearchBar'])): ?>
+        <p>Aucune recette trouvée pour la recherche : <?php echo htmlspecialchars($_POST['shearchBar']); ?></p>
     <?php endif; ?>
 </body>
 </html>

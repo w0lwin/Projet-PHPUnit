@@ -23,6 +23,22 @@ function details($recetteDAO){
 $recette = details($recetteDAO);
 // Récupérer les ingrédients de la recette
 $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
+
+// fonction pour donner une image selon la categorie de la recette
+function getImageForCategory($categoryId) {
+    // Logique pour associer une image à l'aide d'un tableau associatif
+
+    $categoryImages = array(
+        2 => 'https://img.freepik.com/photos-gratuite/pates-penne-sauce-tomate-au-poulet-tomates-table-bois_2829-19744.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        3 => 'https://img.freepik.com/photos-gratuite/femme-mange-gateau-cacao-couches-creme-blanche-morceaux-chocolat_141793-2217.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        6 => 'https://img.freepik.com/photos-premium/antipasto-espagnol-classique-pintxos-tapas-aux-crevettes-camembert-saumon-jambon-dans-assiette-blanche-mise-au-point-selective_207126-4362.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        10 => 'https://img.freepik.com/photos-gratuite/serveur-met-pailles-plastique-dans-cocktail-sangria-dans-verre_140725-1476.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+        12 => 'https://img.freepik.com/photos-gratuite/assiette-crevettes-garnie-epinards-farcis-pain-sauce-carottes-rapees_141793-2275.jpg?size=626&ext=jpg&ga=GA1.1.1607612590.1695717085&semt=ais',
+    );
+
+    // Vérifiez si la catégorie existe dans le tableau, sinon utilisez une image par défaut
+    return isset($categoryImages[$categoryId]) ? $categoryImages[$categoryId] : 'default_image.jpg';
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +59,11 @@ $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
         <h2>Details de la recette :</h2>
         <ul>
             <li>
-                <h3>Nom: <?php echo $recette->getNomRecette(); ?></h3>
+                <?php
+                    $imagePath = getImageForCategory($recette->getCategorieId());
+                ?>
+                <div class="shearch-image-recette"><img src="<?php echo $imagePath; ?>" alt="image"></div>
+                <p>Nom: <?php echo $recette->getNomRecette(); ?></p>
                 <p>Difficulté: <?php echo $recette->getDifficulte(); ?></p>
                 <!-- Affiche les différents ingrédients stockés dans $ingredients -->
                 <p>Ingrédients:</p>
