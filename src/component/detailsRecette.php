@@ -33,6 +33,12 @@ $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
     <link rel="stylesheet" href="../../Css/index.css">
 </head>
 <body>
+<header>
+        <a href="../../index.php">Home</a>
+        <a href="displayRecette.php">Recettes</a>
+        <a href="ajout.php">ajout</a>
+        <a href="shearchBar.php">Recherche</a>
+    </header>
     <?php if (!empty($recette)): ?>
         <h2>Details de la recette :</h2>
         <ul>

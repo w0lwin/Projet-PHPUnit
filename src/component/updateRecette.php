@@ -121,17 +121,27 @@ function sanitizeInput($input)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier une recette</title>
+    <link rel="stylesheet" href="../../Css/index.css">
 </head>
 
 <body>
+<header>
+        <a href="../../index.php">Home</a>
+        <a href="ajout.php">ajout</a>
+        <a href="shearchBar.php">Recherche</a>
+    </header>
     <?php
     $recette = getRecette($recetteDAO, $ingredientDAO);
     if (!empty($recette)) :
         // Récupérer les ingrédients de la recette
         $ingredients = $recetteDAO->getIngredientsRecette($recette->getId());
     ?>
+    
         <h2>Modifier la recette :</h2>
+        <div class="formulaire">
         <form action="updateRecette.php?id=<?php echo $recette->getId(); ?>" method="post">
+        <div class="input-recette">
+
             <label for="nomRecette">Nom de la recette :</label>
             <input type="text" id="nomRecette" name="nomRecette" value="<?php echo sanitizeInput($recette->getNomRecette()); ?>" required>
 
@@ -171,10 +181,12 @@ function sanitizeInput($input)
             </ul>
 
             <input type="submit" name="submit" value="Valider les modifications">
+            </div>
         </form>
 
         <!-- Ajout du formulaire d'ajout d'ingrédients -->
         <form action="updateRecette.php?id=<?php echo $recette->getId(); ?>" method="post">
+        <div class="input-recette">
             <h3>Ajouter un nouvel ingrédient :</h3>
             <label for="nouvelIngredient">Nom de l'ingrédient :</label>
             <input type="text" id="nouvelIngredient" name="nouvelIngredient" required>
@@ -183,8 +195,9 @@ function sanitizeInput($input)
             <input type="text" id="quantiteNouvelIngredient" name="quantiteNouvelIngredient" required>
 
             <input type="submit" name="ajouterIngredient" value="Ajouter">
+            </div>
         </form>
-
+        </div>
         <?php 
             update($recetteDAO, $ingredientDAO, $recette); 
         ?>
