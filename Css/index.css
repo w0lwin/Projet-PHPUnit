@@ -83,6 +83,10 @@ header a:hover {
     display: block; 
 }
 
+.container .recette a{
+    text-decoration: none;
+    color: black;
+}
 
 /*CSS SHEARCH BAR**********************************************************/
 
@@ -208,3 +212,4 @@ ul{
 .submit-recette{
     margin-left: 45%;
 }
+
