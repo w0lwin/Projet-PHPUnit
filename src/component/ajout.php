@@ -9,7 +9,7 @@
 <body>
     <header>
         <a href="../../index.php">Home</a>
-        <a href="recherche.php">ajout</a>
+        <a href="recherche.php">recherche</a>
         <a href="recette.php">recette</a>
     </header>
     <h1>Ajouter une recette</h1>
