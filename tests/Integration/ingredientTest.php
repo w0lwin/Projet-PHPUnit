@@ -87,42 +87,77 @@ class ingredientTest extends TestCase{
         $this->assertEquals($expected, $this->ingredientDAO->getIngredientsById($id));
     }
 
- /**
- * @dataProvider updateIngredientProvider
- */
-public function testUpdateIngredient($ingredient1, $ingredient2, $expected)
-{
-    // Ajouter plusieurs ingrédients dans la base de données
-    $this->ingredientDAO->addIngredient($ingredient1);
-    $this->ingredientDAO->addIngredient($ingredient2);
+    /**
+     * @dataProvider updateIngredientProvider
+     */
+    public function testUpdateIngredient($ingredient1, $ingredient2, $expected)
+    {
+        // Ajouter plusieurs ingrédients dans la base de données
+        $this->ingredientDAO->addIngredient($ingredient1);
+        $this->ingredientDAO->addIngredient($ingredient2);
 
-    $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
+        $unites_mesures = ['g', 'kg', 'ml', 'L', 'c. à thé', 'c. à soupe', 'tasse', 'tasse à thé', 'tasse à café'];
 
-    $id = 1; // ID de l'ingrédient à modifier
+        $id = 1; // ID de l'ingrédient à modifier
 
-    $ingredient1->setNomIngredient('Pomme');
-    $ingredient1->setUniteMesure('kg');
+        $ingredient1->setNomIngredient('Pomme');
+        $ingredient1->setUniteMesure('kg');
 
-    $nom_ingredient = $ingredient1->getNomIngredient();
+        $nom_ingredient = $ingredient1->getNomIngredient();
 
-    if ($id == null || !is_int($id) || $id < 0) {
-        $this->expectException(Exception::class);
-    }
-
-    // Get the existing ingredients before updating
-    $existingIngredients = $this->ingredientDAO->getIngredients();
-
-    // Expect an exception if the updated ingredient already exists
-    foreach ($existingIngredients as $existingIngredient) {
-        if ($existingIngredient->getNomIngredient() == $nom_ingredient) {
+        if ($id == null || !is_int($id) || $id < 0) {
             $this->expectException(Exception::class);
         }
+
+        // Get the existing ingredients before updating
+        $existingIngredients = $this->ingredientDAO->getIngredients();
+
+        // Expect an exception if the updated ingredient already exists
+        foreach ($existingIngredients as $existingIngredient) {
+            if ($existingIngredient->getNomIngredient() == $nom_ingredient) {
+                $this->expectException(Exception::class);
+            }
+        }
+
+        // Attempt to update the ingredient
+        $this->ingredientDAO->updateIngredient($ingredient1);
     }
 
-    // Attempt to update the ingredient
-    $this->ingredientDAO->updateIngredient($ingredient1);
-}
+    /**
+     * @dataProvider deleteIngredientProvider
+     */
+    public function testDeleteIngredient($ingredient, $expected)
 
+    {
+        $this->ingredientDAO->addIngredient($ingredient);
+
+        $id = 1; // ID de l'ingrédient à supprimer
+
+        if ($id == null || !is_int($id) || $id < 0) {
+            $this->expectException(Exception::class);
+        }
+
+        $this->assertEquals($expected, $this->ingredientDAO->deleteIngredient($id));
+    }
+
+    /**
+     * @dataProvider getIdByNomIngredientProvider
+     */
+
+    public function testGetIdByNomIngredient($ingredient,$nom_ingredient, $expected)
+    {
+       
+
+        if ($nom_ingredient == null) {
+            $this->expectException(Exception::class);
+        }
+
+        if (!is_string($nom_ingredient)) {
+            $this->expectException(Exception::class);
+        }
+        $this->ingredientDAO->addIngredient($ingredient);
+        $this->assertEquals($expected, $this->ingredientDAO->getIdByNomIngredient($nom_ingredient));
+    }
 
     
     public static function ajouterIngredientProvider()
@@ -155,9 +190,27 @@ public function testUpdateIngredient($ingredient1, $ingredient2, $expected)
     public static function updateIngredientProvider()
     {
         return [
-            [new Ingredient(null,'Pomme', 'kg'), new Ingredient(1,'Pomme', 'kg'), 1],
-            [new Ingredient(null,'Poire', 'kg'), new Ingredient(1,'Poire', 'kg'), 1],
+            [new Ingredient(null,'Pomme', 'kg'), new Ingredient(1,'Poire', 'kg'), 1],
+            [new Ingredient(null,'Poire', 'kg'), new Ingredient(1,'Pomme', 'kg'), 1],
             [new Ingredient(null,'Fraise', 'kg'), new Ingredient(1,'Pomme', 'kg'), 1],
+        ];
+    }
+
+    public static function deleteIngredientProvider()
+    {
+        return [
+            [new Ingredient(null,'Pomme', 'kg'), null],
+            [new Ingredient(null,'Poire', 'kg'), null],
+            [new Ingredient(null,'Fraise', 'kg'), null],
+        ];
+    }
+
+    public static function getIdByNomIngredientProvider()
+    {
+        return [
+            [new Ingredient(null,'Pomme', 'kg'), "Pomme", 1],
+            [new Ingredient(null,'Poire', 'kg'),"", false],
+            [new Ingredient(null,'Fraise', 'kg'), 3, false],
         ];
     }
 }

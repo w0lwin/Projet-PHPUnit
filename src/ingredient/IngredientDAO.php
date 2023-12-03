@@ -135,6 +135,10 @@ class IngredientDAO{
             throw new Exception('L\'id de l\'ingrédient doit être un nombre');
         }
 
+        if($ingredient_id < 0){
+            throw new Exception('L\'id de l\'ingrédient doit être un nombre positif');
+        }
+
         $sql = "DELETE FROM ingredients WHERE ingredient_id = :ingredient_id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':ingredient_id', $ingredient_id);
@@ -146,6 +150,15 @@ class IngredientDAO{
 
     public function getIdByNomIngredient($nomIngredient)
     {
+
+        if($nomIngredient == null){
+            throw new Exception('Le nom de l\'ingrédient est obligatoire');
+        }
+
+        if(!is_string($nomIngredient)){
+            throw new Exception('Le nom de l\'ingrédient doit être une chaîne de caractères');
+        }
+        
         $stmt = $this->db->prepare("SELECT ingredient_id FROM ingredients WHERE nom_ingredient = :nom_ingredient");
         $stmt->bindParam(':nom_ingredient', $nomIngredient);
         $stmt->execute();
