@@ -38,8 +38,19 @@ function update($recetteDAO, $ingredientDAO, $existingRecette)
 
         if (!$existingIngredient) {
             // L'ingrédient n'existe pas encore, ajouter-le à la base de données
+ 
             $ingredientId = $ingredientDAO->addIngredient($ingredient);
             $ingredientId = intval($ingredientId);
+            
+
+            echo "ingrédient : ";
+            var_dump($ingredientId);
+            echo "<br>";
+            echo "existing recette : ";
+            var_dump($existingRecette->getId());
+            echo "<br>";
+            echo "quantite nouvel ingredient : ";
+            var_dump($quantiteNouvelIngredient);
 
             echo "L'ingrédient a été ajouté à la base de données";
 

@@ -78,6 +78,10 @@ class IngredientDAO{
         $stmt->bindParam(':nom_ingredient', $nom_ingredient);
         $stmt->bindParam(':unite_mesure', $unite_mesure);
         $stmt->execute();
+
+        $ingredient_id = $this->db->lastInsertId();
+
+        return $ingredient_id;
     }
 
     public function updateIngredient(Ingredient $ingredient){
@@ -147,7 +151,7 @@ class IngredientDAO{
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
         // Vérifier si $result est un tableau et contient la clé 'id'
-        if (is_array($result) && array_key_exists('id', $result)) {
+        if ($result && array_key_exists('id', $result)) {
             return $result['id'];
         } else {
             // Retourner false ou null ou gérer de toute autre manière appropriée
