@@ -53,14 +53,17 @@ class RecetteTest extends TestCase
 
      public function testAddRecette($recette, $expected)
      {
+        // Vérifie si les entrée sont null
          if ($recette->getNomRecette() == null || $recette->getInstruction() == null || $recette->getTempsPreparation() == null || $recette->getTempsCuisson() == null || $recette->getDifficulte() == null || $recette->getCategorieId() == null || $recette->getIngredients() == null ) {
              $this->expectException(Exception::class);
          }
 
+        // Vérifie si les entrée sont des string ou des int
         if (!is_int($recette->getTempsPreparation()) || !is_int($recette->getTempsCuisson()) || !is_int($recette->getDifficulte()) || !is_int($recette->getCategorieId())) {
             $this->expectException(Exception::class);
         }
 
+        // Vérifie si les entrée sont des string ou des int
         if (!is_string($recette->getNomRecette()) || !is_string($recette->getInstruction())) {
             $this->expectException(Exception::class);
 
@@ -104,6 +107,7 @@ class RecetteTest extends TestCase
             $this->expectException(Exception::class);
         }
 
+        // Ajout d'une condition pour tester l'id de la recette
         if ($recetteId == null) {
             $this->expectException(Exception::class);
         }
@@ -132,6 +136,7 @@ class RecetteTest extends TestCase
             $this->expectException(Exception::class);
         }
 
+        // Ajout d'une condition pour tester le titre de la recette
         if ($recetteTitle == null) {
             $this->expectException(Exception::class);
         }
@@ -160,6 +165,7 @@ class RecetteTest extends TestCase
             $this->expectException(Exception::class);
         }
 
+        // Ajout d'une condition pour tester l'id de la recette
         if ($recetteId == null) {
             $this->expectException(Exception::class);
         }
@@ -175,7 +181,7 @@ class RecetteTest extends TestCase
     public function testUpdateRecette($recette,$recetteUpadted, $expected)
     {
         $this->recetteDAO->addRecette($recette);
-        // Validate input data before making assertions
+        // Vérifie si les entrée sont null
         if ($recetteUpadted->getNomRecette() == null || $recetteUpadted->getInstruction() == null ||
             $recetteUpadted->getTempsPreparation() == null || $recetteUpadted->getTempsCuisson() == null ||
             $recetteUpadted->getDifficulte() == null || $recetteUpadted->getCategorieId() == null ||
@@ -183,6 +189,7 @@ class RecetteTest extends TestCase
             $this->expectException(Exception::class);
         }
 
+        // Vérifie si les entrée sont des string ou des int
         if (!is_int($recetteUpadted->getTempsPreparation()) || !is_int($recetteUpadted->getTempsCuisson()) ||
             !is_int($recetteUpadted->getDifficulte()) || !is_int($recetteUpadted->getCategorieId())) {
             $this->expectException(Exception::class);
@@ -214,6 +221,8 @@ class RecetteTest extends TestCase
 
     public function testDeleteRecette($recette, $expected)
     {
+
+        // Vérifie si les entrée sont des string ou des int
         if (!is_int($recette->getId())) {
             $this->expectException(Exception::class);
         }
@@ -233,6 +242,7 @@ class RecetteTest extends TestCase
 
     public function testDeleteIngredientRecette($recette, $ingredient, $expected)
     {
+        // Vérifie si les entrée sont des string ou des int
         if (!is_int($recette->getId())) {
             $this->expectException(Exception::class);
         }
@@ -261,6 +271,7 @@ class RecetteTest extends TestCase
 
     public function testAddIngredientRecette($recette, $ingredient, $expected)
     {
+        // Vérifie si les entrée sont des string ou des int
         if (!is_int($recette->getId())) {
             $this->expectException(Exception::class);
         }
@@ -280,6 +291,43 @@ class RecetteTest extends TestCase
         $this->recetteDAO->addRecette($recette);
         $this->recetteDAO->addIngredientRecette($recette->getId(), $ingredient, 1);
         $this->assertEquals($expected, count($this->recetteDAO->getIngredientsRecette($recette->getId())));
+    }
+
+    /**
+     * @dataProvider updateIngredientRecetteProvider
+     */
+
+    public function testUpdateIngredientRecette($recette, $ingredient, $quantite, $expected)
+    {
+        // Vérifie si les entrée sont des string ou des int
+        if (!is_int($recette->getId())) {
+            $this->expectException(Exception::class);
+        }
+
+        if ($recette->getId() == null) {
+            $this->expectException(Exception::class);
+        }
+
+        if (!is_int($ingredient)) {
+            $this->expectException(Exception::class);
+        }
+
+        if ($ingredient == null) {
+            $this->expectException(Exception::class);
+        }
+
+        if (!is_int($quantite)) {
+            $this->expectException(Exception::class);
+        }
+
+        if ($quantite == null) {
+            $this->expectException(Exception::class);
+        }
+
+        $this->recetteDAO->addRecette($recette);
+        $this->recetteDAO->addIngredientRecette($recette->getId(), $ingredient, 1);
+        $this->recetteDAO->updateIngredientRecette($recette->getId(), $ingredient, $quantite);
+        $this->assertEquals($expected, $this->recetteDAO->getIngredientsRecette($recette->getId())[0]->getQuantite());
     }
 
 
@@ -367,6 +415,13 @@ class RecetteTest extends TestCase
         {
             return [
                 [new Recette(1, "nom_recette", "instruction", 10, 10, 10, 1, 1),1,1],
+                ];    
+        }
+
+        public static function updateIngredientRecetteProvider()
+        {
+            return [
+                [new Recette(null, "nom_recette", "instruction", 10, 10, 10, 1, 1),1,1,1],
                 ];    
         }
 }
